@@ -619,7 +619,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
         <div class="video-card"><img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=500&q=60"><div class="play-badge"><div class="circ">▶</div></div><div class="video-label mono">FORM CHECK — SQUATS</div></div>
         <div class="video-card"><img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=500&q=60"><div class="play-badge"><div class="circ">▶</div></div><div class="video-label mono">15-MIN HIIT BURN</div></div>
         <div class="video-card"><img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=500&q=60"><div class="play-badge"><div class="circ">▶</div></div><div class="video-label mono">MORNING MOBILITY FLOW</div></div>
-        <div class="video-card"><img src="https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?w=500&q=60"><div class="play-badge"><div class="circ">▶</div></div><div class="video-label mono">MEMBER TRANSFORMATION</div></div>
+        <div class="video-card"><img src="lakshmi-transformation.jpeg" style="object-position: top;"><div class="video-label mono">LAKSHMI'S TRANSFORMATION</div></div>
       </div>
     </div>
   </section>
@@ -797,8 +797,6 @@ tr:hover td{background:rgba(255,255,255,0.02);}
         <form id="authForm" class="modal-body-form">
           <div class="field"><label>Username</label><input type="text" id="authName" required placeholder="e.g. Rhea Kapoor"></div>
           <div class="field"><label>Email</label><input type="email" id="authEmail" required placeholder="you@example.com"></div>
-          <div class="field"><label>Age</label><input type="number" id="authAge" required min="10" max="99" placeholder="e.g. 24"></div>
-          <div class="field"><label>Phone Number</label><input type="tel" id="authPhone" required placeholder="10-digit number"></div>
           <div class="err-msg" id="authErr"></div>
           <button type="submit" class="btn btn-grad" style="width:100%; margin-top:8px;">Continue</button>
           <div class="formnote" style="margin-top:14px;">By continuing you agree this is a demo login — no password required, matched by email.</div>
@@ -903,7 +901,6 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       </div>
       <div class="grid2" style="margin-bottom:28px;">
         <div class="stat-card"><span>Email</span><b id="cdEmail" style="font-size:15px; background:none; -webkit-text-fill-color:var(--paper); color:var(--paper);"></b></div>
-        <div class="stat-card"><span>Age / Phone</span><b id="cdMeta" style="font-size:15px; background:none; -webkit-text-fill-color:var(--paper); color:var(--paper);"></b></div>
       </div>
 
       <div class="card" style="margin-bottom:30px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
@@ -1072,16 +1069,10 @@ const SERVICES = [
 ];
 
 const SEED_REVIEWS = [
-  {name:"Meera Shah", rating:5, text:"Lost 8kg in 4 months and actually kept it off. My trainer adjusted my plan every single week."},
-  {name:"Arnav Desai", rating:5, text:"The live classes are the best part — real form corrections, not just a video I ignore."},
-  {name:"Kavya Reddy", rating:4, text:"Diet plan finally fits my actual kitchen. No more bland chicken and rice every day."},
-  {name:"Yash Patel", rating:5, text:"Booked the free demo not expecting much — signed up for Momentum the same week."},
-  {name:"Ishita Bansal", rating:5, text:"Yoga library alone is worth it. I use it between sessions to fix my form."},
-  {name:"Rohit Verma", rating:4, text:"Progress chart keeps me honest. Seeing the line move is oddly motivating."},
-  {name:"Ananya Joshi", rating:5, text:"My trainer replies within hours, not days. Feels like having a coach, not an app."},
-  {name:"Devansh Rao", rating:5, text:"Corporate batch for our office was a huge hit. Everyone's still training months later."},
-  {name:"Priyanka Nair", rating:4, text:"Zoom link right in the calendar means zero excuses to skip class."},
-  {name:"Karan Mehta", rating:5, text:"Went from zero pull-ups to five in ten weeks. The plan actually made sense."}
+  {name:"Lakshmi", rating:5, text:"I joined FitBeat with the aim to lose weight. But soon I realized fitness isn't just about losing weight — it's about staying healthy inside out, being consistent, focused and trusting yourself. This was only possible because of Ronak's constant encouragement, motivation and guidance. Thank you for boosting my confidence and helping my overall wellbeing — I've become stronger, more energetic and fitter. Ronak truly makes fitness an enjoyable part of life."},
+  {name:"Deepshika", rating:5, text:"Ronak is an excellent trainer! Always creating different workouts so you never get bored or lose interest. Great enthusiasm for what she does, very knowledgeable, and loves sharing what she's learned. I highly recommend attending one of her sessions."},
+  {name:"Seema Bhardwaj", rating:5, text:"Just got back from an 11-day trip to Costa Rica — I was walking 15,000+ steps a day and climbing stairs without any drama because my stamina has increased so much. At La Fortuna waterfall I climbed 500 stairs each way without any problem. Thanks Ronak for all of this — miss you girls, will join again once I'm back in Qatar."},
+  {name:"Sallu", rating:5, text:"A big thank you to my trainer for the constant motivation and support. Your dedication and expertise have helped me get stronger, healthier and more confident. I truly appreciate your guidance and encouragement."}
 ];
 
 const QUOTES = [
@@ -1496,23 +1487,16 @@ function setupAuth(){
     e.preventDefault();
     const name = document.getElementById('authName').value.trim();
     const email = document.getElementById('authEmail').value.trim().toLowerCase();
-    const age = document.getElementById('authAge').value;
-    const phone = document.getElementById('authPhone').value.trim();
     const errEl = document.getElementById('authErr');
-
-    if(!/^\d{7,15}$/.test(phone)){ errEl.textContent = "Enter a valid phone number."; errEl.style.display='block'; return; }
     errEl.style.display='none';
 
     const role = TRAINER_EMAILS.includes(email) ? 'trainer' : 'client';
     const trainerProfile = role==='trainer' ? TRAINERS.find(t=>t.email===email) : null;
 
     if(!ALL_USERS[email]){
-      ALL_USERS[email] = { email, name: (role==='trainer' && trainerProfile) ? trainerProfile.name : name, age, phone, role, dashboardAccess:false, joined: new Date().toISOString() };
+      ALL_USERS[email] = { email, name: (role==='trainer' && trainerProfile) ? trainerProfile.name : name, role, dashboardAccess:false, joined: new Date().toISOString() };
       await sset('users', ALL_USERS, true);
       if(role==='client'){ await sset('client:'+email, {dietPlan:"", classes:[], progress:[]}, true); }
-    } else {
-      ALL_USERS[email].age = age; ALL_USERS[email].phone = phone;
-      await sset('users', ALL_USERS, true);
     }
 
     CURRENT_USER = ALL_USERS[email];
@@ -1629,7 +1613,7 @@ function renderClientList(){
   const el = document.getElementById('clientListEl');
   el.innerHTML = clients.length ? clients.map(c=>`
     <div class="client-row" data-email="${c.email}">
-      <div><b>${c.name}</b><br><span>${c.email} · Age ${c.age}</span></div>
+      <div><b>${c.name}</b><br><span>${c.email}</span></div>
       <span class="pill ${c.dashboardAccess?'demo':'diet'}">${c.dashboardAccess?'Access Granted':'Pending Access'}</span>
     </div>
   `).join('') : `<div class="empty-state"><b>No clients yet</b>Clients appear here the moment they sign in on the site.</div>`;
@@ -1641,7 +1625,6 @@ async function openClientDetail(email){
   const user = ALL_USERS[email];
   document.getElementById('cdName').textContent = user.name;
   document.getElementById('cdEmail').textContent = user.email;
-  document.getElementById('cdMeta').textContent = `${user.age} yrs · ${user.phone}`;
   updateAccessUI(user.dashboardAccess);
   const data = await sget('client:'+email, true) || {dietPlan:"", classes:[], progress:[]};
   document.getElementById('cdDietInput').value = data.dietPlan || "";
