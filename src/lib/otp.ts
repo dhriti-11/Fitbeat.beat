@@ -17,12 +17,14 @@ export async function sendOTP(email: string): Promise<{ ok: boolean; error?: str
   const code = generateOTP();
   const stored = await redisSetWithTTL(`otp:${email.toLowerCase()}`, { code, expiresAt: Date.now() + OTP_TTL * 1000 }, OTP_TTL);
   if (!stored) {
-    // Dev fallback when Redis unavailable
     if (process.env.NODE_ENV === "development") {
       console.log(`[DEV OTP] ${email}: ${code}`);
       return { ok: true };
     }
-    return { ok: false, error: "Storage unavailable" };
+    return {
+      ok: false,
+      error: "Storage unavailable. Add Upstash Redis to your Vercel project (KV_REST_API_URL + KV_REST_API_TOKEN).",
+    };
   }
 
   const resend = getResend();
