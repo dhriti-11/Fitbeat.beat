@@ -55,9 +55,20 @@ Any other email signs in as a **client**. New clients must be approved by a trai
 
 1. Push to `https://github.com/dhriti-11/Fitbeat.beat.git`
 2. Vercel auto-deploys from `main`
-3. Framework preset: **Next.js**
-4. Connect Upstash Redis via Vercel Storage marketplace
-5. Add all env vars above in Vercel project settings
+3. Framework preset: **Next.js** (also enforced via `vercel.json`)
+4. **Important:** In Vercel → Project Settings → Build & Development, leave **Output Directory blank**. If it was set to `.` or `public` from the old static site, clear it — otherwise every route returns `404: NOT_FOUND`.
+5. Connect Upstash Redis via Vercel Storage marketplace
+6. Add all env vars above in Vercel project settings (at minimum `AUTH_SECRET`)
+7. Set production branch to `main` after merging the Next.js redesign
+
+### Vercel env vars (minimum for deploy)
+
+| Variable | Value |
+|----------|-------|
+| `AUTH_SECRET` | Run `openssl rand -base64 32` |
+| `AUTH_URL` | Your Vercel URL, e.g. `https://fitbeat-beat.vercel.app` |
+| `KV_REST_API_URL` | From Upstash |
+| `KV_REST_API_TOKEN` | From Upstash |
 
 ## Media Assets
 
