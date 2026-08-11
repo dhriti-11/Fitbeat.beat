@@ -2,11 +2,21 @@ import { Redis } from "@upstash/redis";
 
 const PREFIX = "fitbeat:";
 
+function getRedisConfig() {
+  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  return { url, token };
+}
+
 function getRedis() {
-  const url = process.env.KV_REST_API_URL;
-  const token = process.env.KV_REST_API_TOKEN;
+  const { url, token } = getRedisConfig();
   if (!url || !token) return null;
   return new Redis({ url, token });
+}
+
+export function isRedisConfigured() {
+  const { url, token } = getRedisConfig();
+  return Boolean(url && token);
 }
 
 export async function redisGet<T>(key: string): Promise<T | null> {

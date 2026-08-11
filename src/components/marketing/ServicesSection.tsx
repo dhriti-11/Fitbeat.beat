@@ -36,11 +36,11 @@ export function ServicesSection() {
                 <span className="font-[family-name:var(--font-display)] text-7xl leading-none text-white/10 md:text-8xl">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <div className="flex-1">
-                  <h3 className="font-[family-name:var(--font-display)] text-xl uppercase tracking-wide sm:text-3xl md:text-4xl">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-[family-name:var(--font-display)] text-xl uppercase tracking-wide text-white sm:text-3xl md:text-4xl">
                     {s.t}
                   </h3>
-                  <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[#8FA9C7] md:text-base">{s.d}</p>
+                  <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[#a8bdd4] md:text-base">{s.d}</p>
                 </div>
               </motion.div>
             ))}
