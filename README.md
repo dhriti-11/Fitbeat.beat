@@ -1,82 +1,96 @@
-# FitBeat — Deployment Guide (Fresh Start)
+# FitBeat — Next.js App
 
-Static site (`index.html`) + one serverless API route (`api/storage.js`)
-that persists everything — users, appointments, updates, client diet/
-calendar/progress data, and reviews — in a real Redis database.
+3D animated fitness platform for women, teens and kids. Trainer/client dashboards with progress tracking, diet plans, class calendars, tasks, messages, and announcements.
 
-## What's in this folder
-```
-fitbeat-app/
-├── api/
-│   └── storage.js          ← serverless backend (Upstash Redis)
-├── index.html               ← the entire site
-├── fitbeat-showcase.mp4     ← hero showcase video (~6.7MB, compressed)
-├── fitbeat-about-clip.mp4   ← About section video (~2MB)
-├── package.json
-├── .gitignore
-└── README.md
-```
+**Live:** [fitbeat-beat.vercel.app](https://fitbeat-beat.vercel.app)
 
-## 1. Push to a brand-new GitHub repo
+## Stack
+
+- **Next.js 15** + React 19 + TypeScript
+- **Tailwind CSS 4** — blue/orange glassmorphism design
+- **React Three Fiber** — 3D hero animations
+- **Framer Motion** — scroll reveals and transitions
+- **Auth.js (NextAuth v5)** — Google OAuth + email OTP via Resend
+- **Upstash Redis** — persistent storage (users, client data, appointments, messages, tasks)
+- **FullCalendar** — visual class/diet calendars
+- **Recharts** — progress charts
+
+## Local Development
 
 ```bash
-cd fitbeat-app
-git init
-git add .
-git commit -m "FitBeat site — fresh start"
+npm install
+cp .env.example .env.local   # fill in values
+npm run dev                  # http://localhost:3000
 ```
 
-Create a new **empty** repo on github.com (don't add a README, .gitignore,
-or license there — you already have those locally), then:
+## Environment Variables
 
-```bash
-git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
-git branch -M main
-git push -u origin main
+Set these in `.env.local` (local) and Vercel project settings (production):
+
+| Variable | Description |
+|----------|-------------|
+| `AUTH_SECRET` | Random secret — run `openssl rand -base64 32` |
+| `AUTH_GOOGLE_ID` | Google OAuth client ID |
+| `AUTH_GOOGLE_SECRET` | Google OAuth client secret |
+| `RESEND_API_KEY` | Resend API key for OTP emails |
+| `EMAIL_FROM` | Sender address, e.g. `FitBeat <hello@fitbeat.studio>` |
+| `CONTACT_EMAIL` | Where contact form messages go |
+| `KV_REST_API_URL` | Upstash Redis REST URL (auto-injected on Vercel) |
+| `KV_REST_API_TOKEN` | Upstash Redis REST token |
+
+## Trainer Access
+
+Trainer emails are configured in [`src/lib/constants.ts`](src/lib/constants.ts):
+
+```ts
+export const TRAINER_EMAILS = [
+  "rashmi.chokshi15@gmail.com",
+  "chit_ronak@yahoo.com",
+];
 ```
 
-## 2. Import into Vercel
+Any other email signs in as a **client**. New clients must be approved by a trainer before accessing their full dashboard.
 
-1. Go to https://vercel.com/new and import that GitHub repo.
-2. Framework preset: **Other**. No build command needed.
-3. Deploy. It'll go live even before the database is connected — storage
-   calls will just silently fail until step 3.
+## Deployment (GitHub + Vercel)
 
-## 3. Connect the database (Upstash Redis via Vercel Marketplace)
+1. Push to `https://github.com/dhriti-11/Fitbeat.beat.git`
+2. Vercel auto-deploys from `main`
+3. Framework preset: **Next.js**
+4. Connect Upstash Redis via Vercel Storage marketplace
+5. Add all env vars above in Vercel project settings
 
-1. Vercel project → **Storage** tab → **Marketplace Database Providers** → **Upstash** → **Redis**.
-2. Create a database, connect it to this project — Vercel auto-injects
-   `KV_REST_API_URL` and `KV_REST_API_TOKEN`, which `api/storage.js`
-   already reads. No extra config needed.
-3. Redeploy when prompted (Deployments tab → latest → ⋯ → Redeploy).
+## Media Assets
 
-## 4. Test it
+Drop photos/videos into `public/` and update [`src/lib/media.ts`](src/lib/media.ts):
 
-- Sign in with `rashmi.chokshi15@gmail.com` or `chit_ronak@yahoo.com` → Trainer Dashboard.
-- Sign in with any other email → client "book a free demo" flow.
-- In the Trainer Dashboard, open a client and click **Grant Access** to
-  unlock their personalized dashboard on their next sign-in.
+- Hero video: `public/fitbeat-showcase.mp4`
+- About clip: `public/fitbeat-about-clip.mp4`
+- Branch images: `public/branches/kuwait.jpg`, etc.
+- Trainer photos: `public/trainers/`
 
-## 5. Trainer login emails
+## Project Structure
 
-Controlled by `TRAINER_EMAILS` near the top of the `<script>` in
-`index.html`:
-```js
-const TRAINER_EMAILS = ["rashmi.chokshi15@gmail.com", "chit_ronak@yahoo.com"];
 ```
-Edit this array directly to add/remove trainer access.
+src/
+├── app/                    # Next.js App Router pages & API routes
+├── components/
+│   ├── three/              # R3F 3D scenes
+│   ├── marketing/          # Landing page sections
+│   ├── dashboard/          # Dashboard UI components
+│   └── ui/                 # Shared UI primitives
+└── lib/                    # Auth, Redis, constants, types
+```
 
-## 6. Still open
+## Client Flow
 
-- Trainer #3's real name, role, and bio (currently a placeholder in the
-  `TRAINERS` array in `index.html`).
-- Real trainer photos (currently initials avatars — RP / RC / FB).
+1. Sign in (Google or email OTP)
+2. Book free demo if new
+3. Trainer grants dashboard access
+4. Full dashboard: diet, classes, progress, tasks, messages, announcements
 
-## A note on Git history and large files
+## Trainer Flow
 
-Keep the two `.mp4` files under GitHub's 100MB limit. If you ever swap
-in a new, larger video, compress it first (e.g. with ffmpeg) — a file
-over 100MB will get your push rejected, and once it's in your Git
-history it stays rejected even after you delete it, forcing a full
-history reset to fix. Starting this repo fresh avoids that problem
-entirely.
+1. Sign in with registered trainer email
+2. View/manage all clients
+3. Grant/revoke access, assign diet plans, schedule classes
+4. Log progress, assign tasks, message clients, post announcements
