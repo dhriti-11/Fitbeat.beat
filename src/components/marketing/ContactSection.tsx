@@ -30,7 +30,7 @@ export function ContactSection() {
           <p className="mt-6 max-w-md text-[#8FA9C7]">
             Questions about a plan, an injury, or which coach fits your goal? Send it straight to the team.
           </p>
-          <div className="mt-10 space-y-2 font-[family-name:var(--font-space)] text-sm uppercase tracking-widest text-[#8FA9C7]">
+          <div className="mt-10 space-y-2 font-[family-name:var(--font-accent)] text-sm uppercase tracking-widest text-[#8FA9C7]">
             <p>hello@fitbeat.studio</p>
             <p>+91 98765 43210</p>
           </div>
@@ -62,7 +62,7 @@ export function ContactSection() {
           />
           <button
             type="submit"
-            className="w-full border border-[#4FA3FF]/40 py-4 font-[family-name:var(--font-space)] text-xs uppercase tracking-[0.2em] transition hover:bg-[#4FA3FF]/10"
+            className="w-full border border-[#4FA3FF]/40 py-4 font-[family-name:var(--font-accent)] text-xs uppercase tracking-[0.2em] transition hover:bg-[#4FA3FF]/10"
           >
             Send Message
           </button>

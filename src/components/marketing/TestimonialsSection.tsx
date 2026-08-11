@@ -62,7 +62,7 @@ export function TestimonialsSection() {
               >
                 <div className="text-2xl text-[#F5821F]">{"★".repeat(r.rating)}</div>
                 <p className="mt-6 text-xl leading-relaxed md:text-2xl">&ldquo;{r.text}&rdquo;</p>
-                <p className="mt-8 font-[family-name:var(--font-condensed)] text-2xl uppercase tracking-wide text-[#4FA3FF]">
+                <p className="mt-8 font-[family-name:var(--font-display)] text-2xl uppercase tracking-wide text-[#4FA3FF]">
                   — {r.name}
                 </p>
               </motion.div>
@@ -79,7 +79,7 @@ export function TestimonialsSection() {
           </div>
 
           <form onSubmit={submitReview} className="forge-frame p-8">
-            <h3 className="font-[family-name:var(--font-condensed)] text-2xl uppercase">Add Your Review</h3>
+            <h3 className="font-[family-name:var(--font-display)] text-2xl uppercase">Add Your Review</h3>
             <div className="mt-6 space-y-3">
               <input
                 required
@@ -107,7 +107,7 @@ export function TestimonialsSection() {
               />
               <button
                 type="submit"
-                className="w-full bg-[#1E6FD9] py-3 font-[family-name:var(--font-space)] text-[10px] uppercase tracking-widest"
+                className="w-full bg-[#1E6FD9] py-3 font-[family-name:var(--font-accent)] text-[10px] uppercase tracking-widest"
               >
                 Post Review
               </button>

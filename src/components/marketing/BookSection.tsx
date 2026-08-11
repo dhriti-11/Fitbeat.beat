@@ -37,7 +37,7 @@ export function BookSection() {
               <button
                 key={t}
                 onClick={() => setType(t)}
-                className={`px-4 py-2 font-[family-name:var(--font-space)] text-[10px] uppercase tracking-widest transition ${
+                className={`px-4 py-2 font-[family-name:var(--font-accent)] text-[10px] uppercase tracking-widest transition ${
                   type === t
                     ? "bg-[#F5821F] text-[#060e1a]"
                     : "forge-frame text-[#8FA9C7] hover:border-[#F5821F]/40"
@@ -80,7 +80,7 @@ export function BookSection() {
           />
           <button
             type="submit"
-            className="w-full bg-[#F5821F] py-4 font-[family-name:var(--font-space)] text-xs font-bold uppercase tracking-[0.2em] text-[#060e1a] transition hover:bg-[#FFA94D]"
+            className="w-full bg-[#F5821F] py-4 font-[family-name:var(--font-accent)] text-xs font-bold uppercase tracking-[0.2em] text-[#060e1a] transition hover:bg-[#FFA94D]"
           >
             Confirm Booking
           </button>

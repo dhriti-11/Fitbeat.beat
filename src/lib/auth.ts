@@ -6,6 +6,12 @@ import { verifyOTP } from "./otp";
 import { redisGet, redisSet } from "./redis";
 import type { User } from "./types";
 
+const DEV_SECRET = "fitbeat-local-dev-secret-do-not-use-in-production";
+
+function getAuthSecret() {
+  return process.env.AUTH_SECRET || (process.env.NODE_ENV === "development" ? DEV_SECRET : undefined);
+}
+
 async function upsertUser(email: string, name: string) {
   const users = (await redisGet<Record<string, User>>("users")) || {};
   const key = email.toLowerCase();
@@ -26,12 +32,21 @@ async function upsertUser(email: string, name: string) {
   return users[key];
 }
 
+const googleConfigured =
+  Boolean(process.env.AUTH_GOOGLE_ID) && Boolean(process.env.AUTH_GOOGLE_SECRET);
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  trustHost: true,
+  secret: getAuthSecret(),
   providers: [
-    Google({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET,
-    }),
+    ...(googleConfigured
+      ? [
+          Google({
+            clientId: process.env.AUTH_GOOGLE_ID!,
+            clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+          }),
+        ]
+      : []),
     Credentials({
       id: "otp",
       name: "Email OTP",
@@ -95,5 +110,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/sign-in",
   },
   session: { strategy: "jwt" },
-  secret: process.env.AUTH_SECRET,
 });
+
+export { googleConfigured };

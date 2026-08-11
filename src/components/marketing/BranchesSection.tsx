@@ -26,13 +26,13 @@ export function BranchesSection() {
               className="forge-frame group overflow-hidden"
             >
               <div className="relative flex h-48 items-end overflow-hidden bg-gradient-to-br from-[#1E6FD9]/20 to-[#F5821F]/20 p-6">
-                <span className="font-[family-name:var(--font-condensed)] text-[100px] leading-none text-white/5 transition group-hover:text-white/10">
+                <span className="font-[family-name:var(--font-display)] text-[100px] leading-none text-white/5 transition group-hover:text-white/10">
                   {b.city.slice(0, 3).toUpperCase()}
                 </span>
               </div>
               <div className="border-t border-white/10 p-6">
-                <h3 className="font-[family-name:var(--font-condensed)] text-3xl uppercase">{b.city}</h3>
-                <p className="mt-1 font-[family-name:var(--font-space)] text-[10px] uppercase tracking-widest text-[#F5821F]">
+                <h3 className="font-[family-name:var(--font-display)] text-3xl uppercase">{b.city}</h3>
+                <p className="mt-1 font-[family-name:var(--font-accent)] text-[10px] uppercase tracking-widest text-[#F5821F]">
                   {b.country}
                 </p>
                 <p className="mt-3 text-sm text-[#8FA9C7]">{b.address}</p>

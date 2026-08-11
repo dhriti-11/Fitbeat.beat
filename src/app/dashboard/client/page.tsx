@@ -79,11 +79,11 @@ export default function ClientDashboardPage() {
         <div className="grid gap-6 md:grid-cols-2">
           <div className="glass rounded-2xl p-6">
             <p className="text-sm text-[#8FA9C7]">Upcoming Classes</p>
-            <p className="font-[family-name:var(--font-syne)] text-3xl font-bold grad-text">{clientData?.classes?.length || 0}</p>
+            <p className="font-[family-name:var(--font-display)] text-3xl font-bold grad-text">{clientData?.classes?.length || 0}</p>
           </div>
           <div className="glass rounded-2xl p-6">
             <p className="text-sm text-[#8FA9C7]">New Updates</p>
-            <p className="font-[family-name:var(--font-syne)] text-3xl font-bold grad-text">{updates.length}</p>
+            <p className="font-[family-name:var(--font-display)] text-3xl font-bold grad-text">{updates.length}</p>
           </div>
           {upcoming && (
             <div className="glass rounded-2xl p-6 md:col-span-2">
@@ -99,7 +99,7 @@ export default function ClientDashboardPage() {
           )}
           <div className="glass rounded-2xl p-6 md:col-span-2">
             <h3 className="font-bold">Motivation for today</h3>
-            <p className="mt-2 font-[family-name:var(--font-syne)] text-lg text-[#4FA3FF]">{quote}</p>
+            <p className="mt-2 font-[family-name:var(--font-display)] text-lg text-[#4FA3FF]">{quote}</p>
           </div>
         </div>
       )}

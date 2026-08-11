@@ -236,11 +236,11 @@ export default function TrainerDashboardPage() {
         <div className="grid gap-6 md:grid-cols-2">
           <div className="glass rounded-2xl p-6">
             <p className="text-sm text-[#8FA9C7]">Active Clients</p>
-            <p className="font-[family-name:var(--font-syne)] text-3xl font-bold grad-text">{clients.filter((c) => c.dashboardAccess).length}</p>
+            <p className="font-[family-name:var(--font-display)] text-3xl font-bold grad-text">{clients.filter((c) => c.dashboardAccess).length}</p>
           </div>
           <div className="glass rounded-2xl p-6">
             <p className="text-sm text-[#8FA9C7]">Pending Appointments</p>
-            <p className="font-[family-name:var(--font-syne)] text-3xl font-bold grad-text">{appointments.filter((a) => a.status === "pending").length}</p>
+            <p className="font-[family-name:var(--font-display)] text-3xl font-bold grad-text">{appointments.filter((a) => a.status === "pending").length}</p>
           </div>
           <div className="glass rounded-2xl p-6 md:col-span-2">
             <h3 className="font-bold">Recent client activity</h3>

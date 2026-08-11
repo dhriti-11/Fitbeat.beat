@@ -22,7 +22,7 @@ export function YogaLibrary() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((p) => (
           <div key={p.name} className="glass rounded-2xl p-5">
-            <h3 className="font-[family-name:var(--font-syne)] font-bold">{p.name}</h3>
+            <h3 className="font-[family-name:var(--font-display)] font-bold">{p.name}</h3>
             <p className="text-xs text-[#4FA3FF]">{p.sk}</p>
             <p className="mt-2 text-sm text-[#8FA9C7]">{p.benefits}</p>
             <p className="mt-2 text-xs text-[#8FA9C7]/80">{p.how}</p>

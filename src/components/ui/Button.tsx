@@ -8,8 +8,8 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 export function Button({ variant = "grad", size = "md", className, children, href, ...props }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center font-[family-name:var(--font-space)] font-bold uppercase tracking-[0.18em] transition-all duration-300 disabled:opacity-50";
-  const sizes = { sm: "px-4 py-2 text-[10px]", md: "px-6 py-3 text-[11px]", lg: "px-8 py-4 text-xs" };
+    "inline-flex items-center justify-center font-[family-name:var(--font-accent)] font-bold uppercase tracking-[0.14em] transition-all duration-300 disabled:opacity-50";
+  const sizes = { sm: "px-4 py-2 text-xs", md: "px-6 py-3 text-xs", lg: "px-8 py-4 text-sm" };
   const variants = {
     grad: "bg-gradient-to-r from-[#1E6FD9] to-[#F5821F] text-white hover:brightness-110",
     ghost: "border border-white/15 bg-transparent text-[#F3EFFF] hover:border-[#F5821F]/50 hover:bg-white/5",

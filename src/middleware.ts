@@ -25,9 +25,15 @@ export default auth((req) => {
     return NextResponse.redirect(new URL("/dashboard/client", req.url));
   }
 
+  if (pathname.startsWith("/sign-up") && isLoggedIn) {
+    if (role === "trainer") return NextResponse.redirect(new URL("/dashboard/trainer", req.url));
+    if (!hasAccess) return NextResponse.redirect(new URL("/dashboard/client/gate", req.url));
+    return NextResponse.redirect(new URL("/dashboard/client", req.url));
+  }
+
   return NextResponse.next();
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/sign-in"],
+  matcher: ["/dashboard/:path*", "/sign-in", "/sign-up"],
 };

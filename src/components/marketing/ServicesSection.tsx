@@ -4,8 +4,11 @@ import { motion } from "framer-motion";
 import { SERVICES, PRICING_TIERS } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { useIsMobile } from "@/lib/useMediaQuery";
 
 export function ServicesSection() {
+  const isMobile = useIsMobile();
+
   return (
     <>
       <section id="services" className="relative z-10 py-24 md:py-32">
@@ -16,7 +19,7 @@ export function ServicesSection() {
             <span className="text-[#F5821F]"> Around You.</span>
           </h2>
 
-          <div className="mt-16 space-y-6">
+          <div className="mt-16 pb-[30vh] md:pb-[40vh]">
             {SERVICES.map((s, i) => (
               <motion.div
                 key={s.t}
@@ -24,14 +27,17 @@ export function ServicesSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ delay: i * 0.06 }}
-                className="stacked-card flex flex-col gap-6 rounded-none p-8 md:flex-row md:items-center md:gap-12 md:p-10"
-                style={{ top: `${5 + i * 1.5}rem` }}
+                className="stacked-card flex flex-col gap-4 rounded-none p-6 sm:gap-6 sm:p-8 md:flex-row md:items-center md:gap-12 md:p-10"
+                style={{
+                  zIndex: i + 1,
+                  top: `calc(${isMobile ? "4.5rem" : "6rem"} + ${i * (isMobile ? 0.75 : 1)}rem)`,
+                }}
               >
-                <span className="font-[family-name:var(--font-condensed)] text-7xl leading-none text-white/10 md:text-8xl">
+                <span className="font-[family-name:var(--font-display)] text-7xl leading-none text-white/10 md:text-8xl">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="flex-1">
-                  <h3 className="font-[family-name:var(--font-condensed)] text-3xl uppercase tracking-wide md:text-4xl">
+                  <h3 className="font-[family-name:var(--font-display)] text-xl uppercase tracking-wide sm:text-3xl md:text-4xl">
                     {s.t}
                   </h3>
                   <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[#8FA9C7] md:text-base">{s.d}</p>
@@ -51,7 +57,7 @@ export function ServicesSection() {
             </h2>
           </div>
 
-          <div className="mt-16 grid gap-6 md:grid-cols-3">
+          <div className="mt-12 grid gap-6 sm:mt-16 md:grid-cols-3">
             {PRICING_TIERS.map((tier, i) => (
               <motion.div
                 key={tier.name}
@@ -64,12 +70,12 @@ export function ServicesSection() {
                 }`}
               >
                 {tier.featured && (
-                  <span className="mb-4 inline-block w-fit border border-[#F5821F]/40 px-3 py-1 font-[family-name:var(--font-space)] text-[10px] uppercase tracking-[0.2em] text-[#FFA94D]">
+                  <span className="mb-4 inline-block w-fit border border-[#F5821F]/40 px-3 py-1 font-[family-name:var(--font-accent)] text-[10px] uppercase tracking-[0.2em] text-[#FFA94D]">
                     Most Popular
                   </span>
                 )}
-                <h3 className="font-[family-name:var(--font-condensed)] text-4xl uppercase">{tier.name}</h3>
-                <p className="mt-3 font-[family-name:var(--font-condensed)] text-5xl text-[#F5821F]">{tier.price}</p>
+                <h3 className="font-[family-name:var(--font-display)] text-4xl uppercase">{tier.name}</h3>
+                <p className="mt-3 font-[family-name:var(--font-display)] text-5xl text-[#F5821F]">{tier.price}</p>
                 <ul className="mt-8 flex-1 space-y-3 text-sm text-[#8FA9C7]">
                   {tier.features.map((f) => (
                     <li key={f} className="flex gap-3">
@@ -78,7 +84,7 @@ export function ServicesSection() {
                     </li>
                   ))}
                 </ul>
-                <Button href="#book" variant={tier.featured ? "gold" : "ghost"} className="mt-8 w-full">
+                <Button href="#book" variant="gold" className="mt-8 w-full">
                   Contact Trainer
                 </Button>
               </motion.div>

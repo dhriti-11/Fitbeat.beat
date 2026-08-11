@@ -33,16 +33,16 @@ export function TrainersSection() {
             >
               <div className="absolute inset-0 bg-gradient-to-br from-[#1E6FD9]/40 via-[#0a1628] to-[#F5821F]/30 transition duration-500 group-hover:scale-105" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="font-[family-name:var(--font-condensed)] text-[120px] leading-none text-white/10 transition group-hover:text-white/20">
+                <span className="font-[family-name:var(--font-display)] text-[72px] leading-none text-white/10 transition group-hover:text-white/20 sm:text-[100px] md:text-[120px]">
                   {t.initials}
                 </span>
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-[#060e1a] via-[#060e1a]/20 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                <span className="font-[family-name:var(--font-space)] text-[10px] uppercase tracking-[0.2em] text-[#4FA3FF]">
+                <span className="font-[family-name:var(--font-accent)] text-[10px] uppercase tracking-[0.2em] text-[#4FA3FF]">
                   ✓ Certified
                 </span>
-                <h3 className="mt-2 font-[family-name:var(--font-condensed)] text-3xl uppercase leading-none">
+                <h3 className="mt-2 font-[family-name:var(--font-display)] text-3xl uppercase leading-none">
                   {t.name}
                 </h3>
                 <p className="mt-2 text-sm text-[#8FA9C7]">{t.role}</p>
@@ -55,13 +55,13 @@ export function TrainersSection() {
       {active !== null && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-6 backdrop-blur-sm" onClick={() => setActive(null)}>
           <div className="forge-frame max-w-md p-8 md:p-10" onClick={(e) => e.stopPropagation()}>
-            <span className="font-[family-name:var(--font-condensed)] text-6xl text-[#F5821F]">{TRAINERS[active].initials}</span>
-            <h3 className="mt-4 font-[family-name:var(--font-condensed)] text-4xl uppercase">{TRAINERS[active].name}</h3>
-            <p className="mt-2 font-[family-name:var(--font-space)] text-xs uppercase tracking-widest text-[#4FA3FF]">
+            <span className="font-[family-name:var(--font-display)] text-6xl text-[#F5821F]">{TRAINERS[active].initials}</span>
+            <h3 className="mt-4 font-[family-name:var(--font-display)] text-4xl uppercase">{TRAINERS[active].name}</h3>
+            <p className="mt-2 font-[family-name:var(--font-accent)] text-xs uppercase tracking-widest text-[#4FA3FF]">
               {TRAINERS[active].role}
             </p>
             <p className="mt-6 leading-relaxed text-[#8FA9C7]">{TRAINERS[active].bio}</p>
-            <button onClick={() => setActive(null)} className="mt-8 font-[family-name:var(--font-space)] text-xs uppercase tracking-widest text-[#F5821F]">
+            <button onClick={() => setActive(null)} className="mt-8 font-[family-name:var(--font-accent)] text-xs uppercase tracking-widest text-[#F5821F]">
               Close
             </button>
           </div>

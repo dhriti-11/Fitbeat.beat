@@ -88,7 +88,7 @@ export default function ClientGatePage() {
           </button>
         </div>
 
-        <p className="mt-6 font-[family-name:var(--font-space)] text-xs uppercase tracking-widest text-[#8FA9C7]">
+        <p className="mt-6 font-[family-name:var(--font-accent)] text-xs uppercase tracking-widest text-[#8FA9C7]">
           Your trainer grants access right after your session
         </p>
       </div>

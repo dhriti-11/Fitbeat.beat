@@ -31,8 +31,8 @@ export function AboutSection() {
               { n: "100%", l: "Trainer-Led" },
             ].map((s) => (
               <div key={s.l}>
-                <div className="font-[family-name:var(--font-condensed)] text-6xl leading-none text-[#F5821F]">{s.n}</div>
-                <div className="mt-2 font-[family-name:var(--font-space)] text-[10px] uppercase tracking-[0.2em] text-[#8FA9C7]">{s.l}</div>
+                <div className="font-[family-name:var(--font-display)] text-4xl leading-none text-[#F5821F] sm:text-6xl">{s.n}</div>
+                <div className="mt-2 font-[family-name:var(--font-accent)] text-[10px] uppercase tracking-[0.2em] text-[#8FA9C7]">{s.l}</div>
               </div>
             ))}
           </div>
@@ -49,10 +49,10 @@ export function AboutSection() {
             <Image src={MEDIA.transformations[0].image} alt="Transformation" fill className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#060e1a] via-transparent to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-8">
-              <p className="font-[family-name:var(--font-space)] text-[10px] uppercase tracking-[0.25em] text-[#F5821F]">
+              <p className="font-[family-name:var(--font-accent)] text-[10px] uppercase tracking-[0.25em] text-[#F5821F]">
                 Transformation Story
               </p>
-              <p className="mt-2 font-[family-name:var(--font-condensed)] text-3xl uppercase">
+              <p className="mt-2 font-[family-name:var(--font-display)] text-3xl uppercase">
                 {MEDIA.transformations[0].name}&apos;s Journey
               </p>
             </div>

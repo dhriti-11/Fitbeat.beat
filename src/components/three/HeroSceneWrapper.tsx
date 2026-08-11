@@ -2,17 +2,25 @@
 
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
+import { useIsMobile } from "@/lib/useMediaQuery";
 
 const HeroScene = dynamic(() => import("./HeroScene").then((m) => m.HeroScene), {
   ssr: false,
-  loading: () => (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <div className="h-48 w-48 rounded-full bg-gradient-to-br from-[#1E6FD9]/30 to-[#F5821F]/30 blur-2xl animate-pulse" />
-    </div>
-  ),
+  loading: () => null,
 });
 
 export function HeroSceneWrapper() {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden>
+        <div className="absolute -right-20 top-10 h-64 w-64 rounded-full bg-[#1E6FD9]/25 blur-3xl" />
+        <div className="absolute -left-16 bottom-20 h-56 w-56 rounded-full bg-[#F5821F]/20 blur-3xl" />
+      </div>
+    );
+  }
+
   return (
     <Suspense fallback={null}>
       <HeroScene />

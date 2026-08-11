@@ -9,11 +9,10 @@
   --color-orange: #f5821f;
   --color-gold: #ffa94d;
   --color-mint: #38bdf8;
-  --color-steel: #8fa9c7;
-  --font-display: var(--font-syne);
-  --font-condensed: var(--font-condensed);
-  --font-body: var(--font-nunito);
-  --font-accent: var(--font-space);
+  --color-steel: #a8bdd4;
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-accent: var(--font-accent);
 }
 
 html {
@@ -24,19 +23,27 @@ body {
   background: var(--color-bg);
   color: var(--color-paper);
   font-family: var(--font-body), sans-serif;
+  font-weight: 600;
+  font-size: 16px;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, .display {
   font-family: var(--font-display), sans-serif;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.02;
 }
 
+p, li, span, label, input, textarea, select, button {
+  font-family: var(--font-body), sans-serif;
+}
+
 .hero-title {
-  font-size: clamp(3.5rem, 12vw, 8.5rem);
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(2.25rem, 10vw, 8.5rem);
+  font-weight: 800;
 }
 
 ::selection {
@@ -58,11 +65,12 @@ h1, h2, h3, .display {
 .forge-pill {
   border: 1px solid rgba(245, 130, 31, 0.35);
   background: rgba(245, 130, 31, 0.08);
-  padding: 0.35rem 0.85rem;
+  padding: 0.4rem 0.9rem;
   border-radius: 999px;
-  font-family: var(--font-space), sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.18em;
+  font-family: var(--font-accent), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #ffa94d;
 }
@@ -72,11 +80,26 @@ h1, h2, h3, .display {
 }
 
 .section-heading {
-  font-family: var(--font-condensed), sans-serif;
-  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.875rem, 5.5vw, 5rem);
+  font-weight: 800;
   line-height: 0.95;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
+}
+
+.section-label {
+  font-family: var(--font-accent), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+}
+
+.text-small {
+  font-family: var(--font-accent), sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 
 .grad-text {
@@ -123,10 +146,17 @@ h1, h2, h3, .display {
 
 .stacked-card {
   position: sticky;
-  top: 6rem;
+  top: 4.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(145deg, rgba(10, 22, 40, 0.95), rgba(6, 14, 26, 0.98));
+  background: linear-gradient(145deg, rgba(10, 22, 40, 0.98), rgba(6, 14, 26, 0.99));
+  box-shadow: 0 -24px 48px rgba(6, 14, 26, 0.85);
   transition: transform 0.4s ease, border-color 0.4s ease;
+}
+
+@media (min-width: 768px) {
+  .stacked-card {
+    top: 6rem;
+  }
 }
 
 .stacked-card:hover {
@@ -138,10 +168,14 @@ h1, h2, h3, .display {
   .mesh-blob, .marquee-track { animation: none; }
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* FullCalendar overrides */
 .fc { --fc-border-color: rgba(255,255,255,0.1); --fc-page-bg-color: transparent; --fc-neutral-bg-color: rgba(255,255,255,0.05); }
 .fc .fc-toolbar-title { color: #F3EFFF; font-family: var(--font-display); }
-.fc .fc-col-header-cell-cushion, .fc .fc-daygrid-day-number { color: #8FA9C7; }
+.fc .fc-col-header-cell-cushion, .fc .fc-daygrid-day-number { color: #a8bdd4; }
 .fc .fc-button { background: #1E6FD9 !important; border: none !important; }
 .fc .fc-button:hover { background: #4FA3FF !important; }
 .fc-event { cursor: pointer; }
