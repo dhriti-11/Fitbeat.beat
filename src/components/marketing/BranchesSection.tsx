@@ -2,30 +2,40 @@
 
 import { motion } from "framer-motion";
 import { BRANCHES } from "@/lib/constants";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 
 export function BranchesSection() {
   return (
-    <section id="branches" className="relative z-10 px-7 py-24">
-      <div className="mx-auto max-w-6xl">
-        <h2 className="text-4xl md:text-5xl">Our offline studios.</h2>
-        <p className="mt-3 max-w-xl text-[#8FA9C7]">FitBeat branches across Kuwait, Qatar and Morbi — with more coming soon.</p>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+    <section id="branches" className="relative z-10 border-t border-white/10 py-24 md:py-32">
+      <div className="mx-auto max-w-7xl px-6 md:px-10">
+        <SectionLabel>Offline Studios</SectionLabel>
+        <h2 className="section-heading max-w-xl">
+          Our Global
+          <span className="text-[#4FA3FF]"> Branches.</span>
+        </h2>
+        <p className="mt-6 max-w-xl text-[#8FA9C7]">Kuwait, Qatar and Morbi — real studios, real community, same FitBeat energy.</p>
+
+        <div className="mt-16 grid gap-6 md:grid-cols-3">
           {BRANCHES.map((b, i) => (
             <motion.div
               key={b.city}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="glass overflow-hidden rounded-3xl"
+              className="forge-frame group overflow-hidden"
             >
-              <div className="flex h-40 items-center justify-center bg-gradient-to-br from-[#1E6FD9]/30 to-[#F5821F]/30">
-                <span className="font-[family-name:var(--font-syne)] text-4xl font-bold opacity-30">{b.city[0]}</span>
+              <div className="relative flex h-48 items-end overflow-hidden bg-gradient-to-br from-[#1E6FD9]/20 to-[#F5821F]/20 p-6">
+                <span className="font-[family-name:var(--font-condensed)] text-[100px] leading-none text-white/5 transition group-hover:text-white/10">
+                  {b.city.slice(0, 3).toUpperCase()}
+                </span>
               </div>
-              <div className="p-6">
-                <h3 className="font-[family-name:var(--font-syne)] text-xl">{b.city}</h3>
-                <p className="text-sm text-[#4FA3FF]">{b.country}</p>
-                <p className="mt-2 text-sm text-[#8FA9C7]">{b.address}</p>
+              <div className="border-t border-white/10 p-6">
+                <h3 className="font-[family-name:var(--font-condensed)] text-3xl uppercase">{b.city}</h3>
+                <p className="mt-1 font-[family-name:var(--font-space)] text-[10px] uppercase tracking-widest text-[#F5821F]">
+                  {b.country}
+                </p>
+                <p className="mt-3 text-sm text-[#8FA9C7]">{b.address}</p>
               </div>
             </motion.div>
           ))}

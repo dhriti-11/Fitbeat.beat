@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0a1930;
-  --color-bg2: #0f2540;
+  --color-bg: #060e1a;
+  --color-bg2: #0a1628;
   --color-paper: #f3efff;
   --color-blue: #1e6fd9;
   --color-blue2: #4fa3ff;
@@ -11,6 +11,7 @@
   --color-mint: #38bdf8;
   --color-steel: #8fa9c7;
   --font-display: var(--font-syne);
+  --font-condensed: var(--font-condensed);
   --font-body: var(--font-nunito);
   --font-accent: var(--font-space);
 }
@@ -30,23 +31,56 @@ body {
 h1, h2, h3, .display {
   font-family: var(--font-display), sans-serif;
   font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1.05;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+
+.hero-title {
+  font-size: clamp(3.5rem, 12vw, 8.5rem);
 }
 
 ::selection {
-  background: var(--color-blue);
-  color: #fff;
+  background: var(--color-orange);
+  color: #060e1a;
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.055);
-  backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.forge-frame {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #0a1628;
+}
+
+.forge-pill {
+  border: 1px solid rgba(245, 130, 31, 0.35);
+  background: rgba(245, 130, 31, 0.08);
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-family: var(--font-space), sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ffa94d;
+}
+
+.forge-stat {
+  position: relative;
+}
+
+.section-heading {
+  font-family: var(--font-condensed), sans-serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .grad-text {
-  background: linear-gradient(135deg, var(--color-blue), var(--color-orange));
+  background: linear-gradient(135deg, var(--color-blue2), var(--color-orange));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -63,9 +97,9 @@ h1, h2, h3, .display {
 .mesh-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.45;
-  animation: drift 22s ease-in-out infinite;
+  filter: blur(100px);
+  opacity: 0.35;
+  animation: drift 24s ease-in-out infinite;
 }
 
 @keyframes drift {
@@ -74,8 +108,34 @@ h1, h2, h3, .display {
   66% { transform: translate(-40px, 50px) scale(0.94); }
 }
 
+.marquee-wrap:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-track {
+  animation: marquee 28s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.stacked-card {
+  position: sticky;
+  top: 6rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(145deg, rgba(10, 22, 40, 0.95), rgba(6, 14, 26, 0.98));
+  transition: transform 0.4s ease, border-color 0.4s ease;
+}
+
+.stacked-card:hover {
+  border-color: rgba(245, 130, 31, 0.4);
+  transform: translateY(-4px);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .mesh-blob { animation: none; }
+  .mesh-blob, .marquee-track { animation: none; }
 }
 
 /* FullCalendar overrides */

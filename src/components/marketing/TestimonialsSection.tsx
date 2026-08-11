@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { SEED_REVIEWS } from "@/lib/constants";
 import type { Review } from "@/lib/types";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 
 export function TestimonialsSection() {
   const [reviews, setReviews] = useState<Review[]>(SEED_REVIEWS);
@@ -21,7 +22,7 @@ export function TestimonialsSection() {
   }, []);
 
   useEffect(() => {
-    const t = setInterval(() => setActive((a) => (a + 1) % reviews.length), 4000);
+    const t = setInterval(() => setActive((a) => (a + 1) % reviews.length), 5000);
     return () => clearInterval(t);
   }, [reviews.length]);
 
@@ -41,53 +42,79 @@ export function TestimonialsSection() {
   const r = reviews[active];
 
   return (
-    <section id="testimonials" className="relative z-10 px-7 py-24">
-      <div className="mx-auto max-w-6xl">
-        <h2 className="text-4xl md:text-5xl">Reviews from the FitBeat community.</h2>
-        <motion.div
-          key={active}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-12 glass rounded-3xl p-8 md:p-12"
-        >
-          <div className="text-[#FFA94D]">{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</div>
-          <p className="mt-4 text-lg leading-relaxed">&ldquo;{r.text}&rdquo;</p>
-          <p className="mt-4 font-[family-name:var(--font-syne)] text-[#4FA3FF]">— {r.name}</p>
-        </motion.div>
+    <section id="testimonials" className="relative z-10 border-t border-white/10 py-24 md:py-32">
+      <div className="mx-auto max-w-7xl px-6 md:px-10">
+        <SectionLabel>Community</SectionLabel>
+        <h2 className="section-heading max-w-2xl">
+          Real Members.
+          <span className="text-[#F5821F]"> Real Words.</span>
+        </h2>
 
-        <form onSubmit={submitReview} className="mt-10 glass rounded-3xl p-6">
-          <h3 className="font-[family-name:var(--font-syne)] text-lg">Add Your Review</h3>
-          <div className="mt-4 grid gap-3 md:grid-cols-2">
-            <input
-              required
-              placeholder="Your Name"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none focus:border-[#4FA3FF]"
-            />
-            <select
-              value={form.rating}
-              onChange={(e) => setForm({ ...form, rating: parseInt(e.target.value) })}
-              className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm"
-            >
-              {[5, 4, 3, 2, 1].map((n) => (
-                <option key={n} value={n}>{n} stars</option>
+        <div className="mt-16 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="forge-frame relative min-h-[280px] p-8 md:p-12">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.4 }}
+              >
+                <div className="text-2xl text-[#F5821F]">{"★".repeat(r.rating)}</div>
+                <p className="mt-6 text-xl leading-relaxed md:text-2xl">&ldquo;{r.text}&rdquo;</p>
+                <p className="mt-8 font-[family-name:var(--font-condensed)] text-2xl uppercase tracking-wide text-[#4FA3FF]">
+                  — {r.name}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+            <div className="absolute bottom-6 right-6 flex gap-2 md:bottom-10 md:right-10">
+              {reviews.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActive(i)}
+                  className={`h-1.5 transition-all ${i === active ? "w-8 bg-[#F5821F]" : "w-1.5 bg-white/20"}`}
+                />
               ))}
-            </select>
+            </div>
           </div>
-          <textarea
-            required
-            placeholder="Your Review"
-            value={form.text}
-            onChange={(e) => setForm({ ...form, text: e.target.value })}
-            className="mt-3 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none focus:border-[#4FA3FF]"
-            rows={3}
-          />
-          <button type="submit" className="mt-3 rounded-full bg-gradient-to-r from-[#1E6FD9] to-[#F5821F] px-6 py-2 text-sm font-bold">
-            Post Review
-          </button>
-          {sent && <p className="mt-2 text-sm text-[#38BDF8]">✓ Thanks! Your review was added.</p>}
-        </form>
+
+          <form onSubmit={submitReview} className="forge-frame p-8">
+            <h3 className="font-[family-name:var(--font-condensed)] text-2xl uppercase">Add Your Review</h3>
+            <div className="mt-6 space-y-3">
+              <input
+                required
+                placeholder="Your Name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="w-full border border-white/10 bg-white/[0.03] px-4 py-3 text-sm outline-none focus:border-[#F5821F]"
+              />
+              <select
+                value={form.rating}
+                onChange={(e) => setForm({ ...form, rating: parseInt(e.target.value) })}
+                className="w-full border border-white/10 bg-white/[0.03] px-4 py-3 text-sm"
+              >
+                {[5, 4, 3, 2, 1].map((n) => (
+                  <option key={n} value={n}>{n} stars</option>
+                ))}
+              </select>
+              <textarea
+                required
+                placeholder="Your Review"
+                value={form.text}
+                onChange={(e) => setForm({ ...form, text: e.target.value })}
+                className="w-full border border-white/10 bg-white/[0.03] px-4 py-3 text-sm"
+                rows={4}
+              />
+              <button
+                type="submit"
+                className="w-full bg-[#1E6FD9] py-3 font-[family-name:var(--font-space)] text-[10px] uppercase tracking-widest"
+              >
+                Post Review
+              </button>
+              {sent && <p className="text-sm text-[#4FA3FF]">✓ Thanks! Your review was added.</p>}
+            </div>
+          </form>
+        </div>
       </div>
     </section>
   );

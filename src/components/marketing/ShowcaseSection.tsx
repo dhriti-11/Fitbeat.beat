@@ -1,52 +1,57 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { MEDIA } from "@/lib/media";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 
 export function ShowcaseSection() {
   const [muted, setMuted] = useState(true);
-  const [playing, setPlaying] = useState(true);
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.92, 1, 0.96]);
 
   return (
-    <section id="showcase" className="relative z-10 px-7 py-24">
-      <div className="mx-auto max-w-6xl">
-        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <h2 className="text-4xl md:text-5xl">Watch FitBeat In Motion</h2>
-          <p className="mt-3 max-w-xl text-[#8FA9C7]">Real sessions, real trainers, real energy — press play and see the studio in action.</p>
-        </motion.div>
-        <div className="relative mt-10 overflow-hidden rounded-3xl glass">
+    <section id="showcase" ref={ref} className="relative z-10 py-20 md:py-32">
+      <div className="mx-auto mb-10 max-w-7xl px-6 md:px-10">
+        <SectionLabel>The Studio In Motion</SectionLabel>
+        <h2 className="section-heading max-w-3xl">
+          Watch FitBeat
+          <span className="text-[#F5821F]"> Ignite.</span>
+        </h2>
+      </div>
+
+      <motion.div style={{ scale }} className="relative mx-auto max-w-[1400px] px-4 md:px-8">
+        <div className="forge-frame relative overflow-hidden">
           <video
             src={MEDIA.heroVideo}
             autoPlay
             loop
             muted={muted}
             playsInline
-            className="aspect-video w-full object-cover"
-            onPlay={() => setPlaying(true)}
-            onPause={() => setPlaying(false)}
+            className="aspect-[21/9] w-full object-cover md:aspect-[2.4/1]"
             id="showcaseVideo"
           />
-          <div className="absolute bottom-4 right-4 flex gap-2">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#060e1a]/60 via-transparent to-[#060e1a]/40" />
+          <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between md:bottom-10 md:left-10 md:right-10">
+            <div>
+              <p className="font-[family-name:var(--font-space)] text-[10px] uppercase tracking-[0.25em] text-[#4FA3FF]">
+                Real Sessions · Real Trainers
+              </p>
+              <p className="mt-2 font-[family-name:var(--font-condensed)] text-2xl uppercase md:text-4xl">
+                Press play. Feel the studio.
+              </p>
+            </div>
             <button
               onClick={() => setMuted(!muted)}
-              className="rounded-full glass px-4 py-2 text-sm"
+              className="rounded-full border border-white/20 bg-black/40 px-5 py-2.5 font-[family-name:var(--font-space)] text-xs uppercase tracking-widest backdrop-blur-md transition hover:border-[#F5821F]"
             >
-              {muted ? "🔇" : "🔊"}
-            </button>
-            <button
-              onClick={() => {
-                const v = document.getElementById("showcaseVideo") as HTMLVideoElement;
-                if (v?.paused) v.play();
-                else v?.pause();
-              }}
-              className="rounded-full glass px-4 py-2 text-sm"
-            >
-              {playing ? "⏸" : "▶"}
+              {muted ? "Unmute" : "Mute"}
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

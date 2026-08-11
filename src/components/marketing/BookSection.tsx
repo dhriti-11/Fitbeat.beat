@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { TRAINERS } from "@/lib/constants";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 
 export function BookSection() {
   const [type, setType] = useState<"demo" | "diet">("demo");
@@ -20,24 +20,36 @@ export function BookSection() {
   }
 
   return (
-    <section id="book" className="relative z-10 px-7 py-24">
-      <div className="mx-auto max-w-2xl">
-        <h2 className="text-4xl md:text-5xl">Start with a free session.</h2>
-        <p className="mt-3 text-[#8FA9C7]">No pressure, no payment. Pick what you need and a trainer will confirm within 24 hours.</p>
-
-        <div className="mt-6 flex gap-2">
-          {(["demo", "diet"] as const).map((t) => (
-            <button
-              key={t}
-              onClick={() => setType(t)}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition ${type === t ? "bg-gradient-to-r from-[#1E6FD9] to-[#F5821F] text-white" : "glass text-[#8FA9C7]"}`}
-            >
-              {t === "demo" ? "Free Demo Session" : "Diet Plan Appointment"}
-            </button>
-          ))}
+    <section id="book" className="relative z-10 py-24 md:py-32">
+      <div className="mx-auto grid max-w-7xl gap-12 px-6 md:px-10 lg:grid-cols-2">
+        <div>
+          <SectionLabel>Join FitBeat</SectionLabel>
+          <h2 className="section-heading">
+            Start With A
+            <br />
+            <span className="text-[#F5821F]">Free Session.</span>
+          </h2>
+          <p className="mt-6 max-w-md text-[#8FA9C7]">
+            No pressure, no payment. A trainer confirms your slot within 24 hours and sends your Zoom link directly.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            {(["demo", "diet"] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => setType(t)}
+                className={`px-4 py-2 font-[family-name:var(--font-space)] text-[10px] uppercase tracking-widest transition ${
+                  type === t
+                    ? "bg-[#F5821F] text-[#060e1a]"
+                    : "forge-frame text-[#8FA9C7] hover:border-[#F5821F]/40"
+                }`}
+              >
+                {t === "demo" ? "Free Demo" : "Diet Consult"}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <motion.form onSubmit={submit} className="mt-8 glass rounded-3xl p-6 space-y-3">
+        <form onSubmit={submit} className="forge-frame space-y-4 p-8 md:p-10">
           {(["name", "email", "phone", "date"] as const).map((field) => (
             <input
               key={field}
@@ -46,13 +58,13 @@ export function BookSection() {
               placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
               value={form[field]}
               onChange={(e) => setForm({ ...form, [field]: e.target.value })}
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none focus:border-[#4FA3FF]"
+              className="w-full border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm outline-none transition focus:border-[#F5821F]"
             />
           ))}
           <select
             value={form.trainer}
             onChange={(e) => setForm({ ...form, trainer: e.target.value })}
-            className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm"
+            className="w-full border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm"
           >
             <option value="">Preferred Trainer (optional)</option>
             {TRAINERS.map((t) => (
@@ -63,14 +75,17 @@ export function BookSection() {
             placeholder="Anything we should know?"
             value={form.note}
             onChange={(e) => setForm({ ...form, note: e.target.value })}
-            className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm"
-            rows={2}
+            className="w-full border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm"
+            rows={3}
           />
-          <button type="submit" className="w-full rounded-full bg-gradient-to-r from-[#1E6FD9] to-[#F5821F] py-3 font-bold">
+          <button
+            type="submit"
+            className="w-full bg-[#F5821F] py-4 font-[family-name:var(--font-space)] text-xs font-bold uppercase tracking-[0.2em] text-[#060e1a] transition hover:bg-[#FFA94D]"
+          >
             Confirm Booking
           </button>
-          {sent && <p className="text-sm text-[#38BDF8]">✓ Booked! Your trainer will reach out soon.</p>}
-        </motion.form>
+          {sent && <p className="text-sm text-[#4FA3FF]">✓ Booked! Your trainer will reach out soon.</p>}
+        </form>
       </div>
     </section>
   );

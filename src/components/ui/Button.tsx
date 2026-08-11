@@ -8,12 +8,12 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 export function Button({ variant = "grad", size = "md", className, children, href, ...props }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center rounded-full font-bold transition-all duration-200 disabled:opacity-50";
-  const sizes = { sm: "px-4 py-2 text-xs", md: "px-5 py-2.5 text-sm", lg: "px-7 py-3.5 text-base" };
+    "inline-flex items-center justify-center font-[family-name:var(--font-space)] font-bold uppercase tracking-[0.18em] transition-all duration-300 disabled:opacity-50";
+  const sizes = { sm: "px-4 py-2 text-[10px]", md: "px-6 py-3 text-[11px]", lg: "px-8 py-4 text-xs" };
   const variants = {
-    grad: "bg-gradient-to-br from-[#1E6FD9] to-[#F5821F] text-white hover:-translate-y-0.5 hover:brightness-110",
-    ghost: "glass text-[#F3EFFF] hover:border-[#4FA3FF]",
-    gold: "bg-gradient-to-br from-[#F5821F] to-[#FFA94D] text-[#1a0f00] hover:-translate-y-0.5",
+    grad: "bg-gradient-to-r from-[#1E6FD9] to-[#F5821F] text-white hover:brightness-110",
+    ghost: "border border-white/15 bg-transparent text-[#F3EFFF] hover:border-[#F5821F]/50 hover:bg-white/5",
+    gold: "bg-[#F5821F] text-[#060e1a] hover:bg-[#FFA94D]",
   };
 
   const classes = clsx(base, sizes[size], variants[variant], className);
