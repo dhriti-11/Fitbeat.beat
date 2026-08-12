@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   const authResult = await requireAuth();
   if (authResult.error) return authResult.error;
   const user = authResult.user!;
-  const { text, clientEmail } = await req.json();
+  const { text, clientEmail, kind, subject } = await req.json();
   if (!text?.trim()) return NextResponse.json({ error: "text required" }, { status: 400 });
 
   const targetEmail = user.role === "trainer" ? clientEmail?.toLowerCase() : user.email.toLowerCase();
@@ -39,6 +39,8 @@ export async function POST(req: NextRequest) {
     text: text.trim(),
     timestamp: new Date().toISOString(),
     read: false,
+    kind: kind || "chat",
+    subject: subject?.trim() || undefined,
   });
   await redisSet(key, messages);
   return NextResponse.json({ ok: true, messages });

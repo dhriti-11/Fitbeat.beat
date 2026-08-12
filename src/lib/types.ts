@@ -70,12 +70,29 @@ export interface Review {
   text: string;
 }
 
+export type MessageKind = "chat" | "diet" | "workout" | "reminder" | "personal";
+
 export interface Message {
   id: string;
   from: string;
   text: string;
   timestamp: string;
   read: boolean;
+  kind?: MessageKind;
+  subject?: string;
+}
+
+export interface LeaveRequest {
+  id: string;
+  clientEmail: string;
+  clientName: string;
+  classId: string;
+  className: string;
+  classDatetime: string;
+  reason: string;
+  status: "pending" | "approved" | "denied";
+  createdAt: string;
+  reviewedAt?: string;
 }
 
 export interface Task {

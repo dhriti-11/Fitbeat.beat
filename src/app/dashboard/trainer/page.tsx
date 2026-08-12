@@ -9,22 +9,30 @@ import { ProgressChart } from "@/components/dashboard/ProgressChart";
 import { MessageThread } from "@/components/dashboard/MessageThread";
 import { TaskList } from "@/components/dashboard/TaskList";
 import { YogaLibrary } from "@/components/dashboard/YogaLibrary";
+import { PersonalSend } from "@/components/dashboard/PersonalSend";
+import { LeaveRequestPanel } from "@/components/dashboard/LeaveRequestPanel";
 import { storageGet, storageSet } from "@/lib/storage-client";
-import type { User, ClientData, Appointment, Update, ClassEvent, ProgressPoint } from "@/lib/types";
+import type { User, ClientData, Appointment, Update, ClassEvent, DietCalendarEntry } from "@/lib/types";
 import { formatDate, uid } from "@/lib/utils";
 
 const NAV = [
   { id: "overview", label: "Overview", icon: "🏠" },
   { id: "clients", label: "My Clients", icon: "👥" },
-  { id: "appointments", label: "Appointments", icon: "🗓" },
+  { id: "plans-hub", label: "Plans & Appointments", icon: "📋" },
   { id: "updates", label: "Post Updates", icon: "📣" },
   { id: "yoga", label: "Yoga Library", icon: "🧘" },
+];
+
+const CLIENT_SECTIONS = [
+  { id: "plans", label: "Plans & Appointments" },
+  { id: "coaching", label: "Coaching & Messages" },
 ];
 
 export default function TrainerDashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [active, setActive] = useState("overview");
+  const [clientSection, setClientSection] = useState("plans");
   const [users, setUsers] = useState<Record<string, User>>({});
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [updates, setUpdates] = useState<Update[]>([]);
@@ -32,10 +40,10 @@ export default function TrainerDashboardPage() {
   const [clientData, setClientData] = useState<ClientData | null>(null);
   const [updateText, setUpdateText] = useState("");
 
-  // Client detail form state
   const [dietPlan, setDietPlan] = useState("");
   const [classForm, setClassForm] = useState({ name: "", datetime: "", zoom: "" });
   const [progressForm, setProgressForm] = useState({ label: "", value: "" });
+  const [mealForm, setMealForm] = useState({ day: "Monday", meal: "Breakfast", description: "" });
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/sign-in");
@@ -61,6 +69,7 @@ export default function TrainerDashboardPage() {
   async function loadClient(email: string) {
     setSelectedClient(email);
     setActive("client-detail");
+    setClientSection("plans");
     const data = await storageGet<ClientData>(`client:${email}`);
     setClientData(data || { dietPlan: "", classes: [], progress: [], dietCalendar: [] });
     setDietPlan(data?.dietPlan || "");
@@ -77,6 +86,24 @@ export default function TrainerDashboardPage() {
   async function saveDiet() {
     if (!selectedClient) return;
     const data = { ...(clientData || { dietPlan: "", classes: [], progress: [], dietCalendar: [] }), dietPlan };
+    await storageSet(`client:${selectedClient}`, data);
+    setClientData(data);
+  }
+
+  async function addMealEntry(e: React.FormEvent) {
+    e.preventDefault();
+    if (!selectedClient || !mealForm.description.trim()) return;
+    const data = clientData || { dietPlan: "", classes: [], progress: [], dietCalendar: [] };
+    const entry: DietCalendarEntry = { id: uid(), ...mealForm };
+    data.dietCalendar = [...(data.dietCalendar || []), entry];
+    await storageSet(`client:${selectedClient}`, data);
+    setClientData({ ...data });
+    setMealForm({ day: "Monday", meal: "Breakfast", description: "" });
+  }
+
+  async function removeMealEntry(id: string) {
+    if (!selectedClient || !clientData) return;
+    const data = { ...clientData, dietCalendar: clientData.dietCalendar.filter((e) => e.id !== id) };
     await storageSet(`client:${selectedClient}`, data);
     setClientData(data);
   }
@@ -144,6 +171,9 @@ export default function TrainerDashboardPage() {
   }
 
   const clients = Object.values(users).filter((u) => u.role === "client");
+  const clientAppts = selectedClient
+    ? appointments.filter((a) => a.email.toLowerCase() === selectedClient.toLowerCase())
+    : [];
 
   if (active === "client-detail" && selectedClient) {
     const client = users[selectedClient];
@@ -153,73 +183,185 @@ export default function TrainerDashboardPage() {
         subtitle={selectedClient}
         nav={[{ id: "back", label: "← Back to Clients" }, ...NAV.slice(1)]}
         active="back"
-        onNav={(id) => { if (id === "back") { setActive("clients"); setSelectedClient(null); } else setActive(id); }}
+        onNav={(id) => {
+          if (id === "back") {
+            setActive("clients");
+            setSelectedClient(null);
+          } else setActive(id);
+        }}
       >
-        <div className="space-y-8">
-          <div className="glass rounded-2xl p-6">
-            <h3 className="font-bold">Dashboard Access</h3>
-            <p className="mt-1 text-sm text-[#8FA9C7]">
-              Status: {client?.dashboardAccess ? "✓ Approved" : "⏳ Pending"}
-            </p>
+        <div className="mb-6 flex flex-wrap gap-2">
+          {CLIENT_SECTIONS.map((s) => (
             <button
-              onClick={() => toggleAccess(selectedClient)}
-              className="mt-3 rounded-full bg-gradient-to-r from-[#1E6FD9] to-[#F5821F] px-5 py-2 text-sm font-bold"
+              key={s.id}
+              onClick={() => setClientSection(s.id)}
+              className={`rounded-full px-5 py-2 text-sm font-bold transition ${
+                clientSection === s.id
+                  ? "bg-gradient-to-r from-[#1E6FD9] to-[#F5821F]"
+                  : "bg-white/5 text-[#8FA9C7] hover:bg-white/10"
+              }`}
             >
-              {client?.dashboardAccess ? "Revoke Access" : "Grant Access"}
+              {s.label}
             </button>
-          </div>
+          ))}
+        </div>
 
-          <div className="glass rounded-2xl p-6">
-            <h3 className="font-bold">Diet Plan</h3>
-            <textarea
-              value={dietPlan}
-              onChange={(e) => setDietPlan(e.target.value)}
-              rows={6}
-              className="mt-3 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none"
-              placeholder="Write the client's diet plan..."
-            />
-            <button onClick={saveDiet} className="mt-3 rounded-full bg-[#1E6FD9] px-5 py-2 text-sm font-bold">Save Diet Plan</button>
-          </div>
+        {clientSection === "plans" && (
+          <div className="space-y-8">
+            <div className="glass rounded-2xl p-6">
+              <h3 className="font-bold">Dashboard Access</h3>
+              <p className="mt-1 text-sm text-[#8FA9C7]">
+                Status: {client?.dashboardAccess ? "✓ Approved" : "⏳ Pending"}
+              </p>
+              <button
+                onClick={() => toggleAccess(selectedClient)}
+                className="mt-3 rounded-full bg-gradient-to-r from-[#1E6FD9] to-[#F5821F] px-5 py-2 text-sm font-bold"
+              >
+                {client?.dashboardAccess ? "Revoke Access" : "Grant Access"}
+              </button>
+            </div>
 
-          <div className="glass rounded-2xl p-6">
-            <h3 className="font-bold">Add Class</h3>
-            <form onSubmit={addClass} className="mt-3 grid gap-3 md:grid-cols-3">
-              <input required placeholder="Class Name" value={classForm.name} onChange={(e) => setClassForm({ ...classForm, name: e.target.value })} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none" />
-              <input required type="datetime-local" value={classForm.datetime} onChange={(e) => setClassForm({ ...classForm, datetime: e.target.value })} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none" />
-              <input placeholder="Zoom Link" value={classForm.zoom} onChange={(e) => setClassForm({ ...classForm, zoom: e.target.value })} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none" />
-              <button type="submit" className="rounded-full bg-[#F5821F] px-5 py-2 text-sm font-bold md:col-span-3">Add to Calendar</button>
-            </form>
-            <ClassCalendar events={clientData?.classes || []} />
-            <div className="mt-4 space-y-2">
-              {(clientData?.classes || []).map((c) => (
-                <div key={c.id} className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-2 text-sm">
-                  <span>{c.name} · {formatDate(c.datetime)}</span>
-                  <button onClick={() => removeClass(c.id)} className="text-red-400">Remove</button>
+            <div className="glass rounded-2xl p-6">
+              <h3 className="font-bold">Diet Plan</h3>
+              <textarea
+                value={dietPlan}
+                onChange={(e) => setDietPlan(e.target.value)}
+                rows={6}
+                className="mt-3 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none"
+                placeholder="Write the client's diet plan..."
+              />
+              <button onClick={saveDiet} className="mt-3 rounded-full bg-[#1E6FD9] px-5 py-2 text-sm font-bold">
+                Save Diet Plan
+              </button>
+            </div>
+
+            <div className="glass rounded-2xl p-6">
+              <h3 className="font-bold">Weekly Meal Plan</h3>
+              <form onSubmit={addMealEntry} className="mt-3 grid gap-3 md:grid-cols-4">
+                <select
+                  value={mealForm.day}
+                  onChange={(e) => setMealForm({ ...mealForm, day: e.target.value })}
+                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none"
+                >
+                  {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((d) => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+                <select
+                  value={mealForm.meal}
+                  onChange={(e) => setMealForm({ ...mealForm, meal: e.target.value })}
+                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none"
+                >
+                  {["Breakfast", "Lunch", "Dinner", "Snack"].map((m) => (
+                    <option key={m} value={m}>{m}</option>
+                  ))}
+                </select>
+                <input
+                  required
+                  placeholder="Meal description"
+                  value={mealForm.description}
+                  onChange={(e) => setMealForm({ ...mealForm, description: e.target.value })}
+                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none md:col-span-2"
+                />
+                <button type="submit" className="rounded-full bg-[#F5821F] px-5 py-2 text-sm font-bold md:col-span-4">
+                  Add Meal Entry
+                </button>
+              </form>
+              <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                {(clientData?.dietCalendar || []).map((e) => (
+                  <div key={e.id} className="flex items-start justify-between rounded-xl bg-white/5 p-3 text-sm">
+                    <div>
+                      <span className="text-[#4FA3FF]">{e.day} · {e.meal}</span>
+                      <p className="text-[#8FA9C7]">{e.description}</p>
+                    </div>
+                    <button onClick={() => removeMealEntry(e.id)} className="text-red-400 text-xs">Remove</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="glass rounded-2xl p-6">
+              <h3 className="font-bold">Client Appointments</h3>
+              {clientAppts.length === 0 ? (
+                <p className="mt-2 text-sm text-[#8FA9C7]">No appointments for this client.</p>
+              ) : (
+                <div className="mt-3 space-y-2">
+                  {clientAppts.map((a) => (
+                    <div key={a.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white/5 px-4 py-3 text-sm">
+                      <div>
+                        <p className="font-semibold">{a.type === "demo" ? "Free Demo" : "Diet Consult"}</p>
+                        <p className="text-[#8FA9C7]">{a.date ? formatDate(a.date) : "TBD"} · {a.status}</p>
+                      </div>
+                      <select
+                        value={a.status}
+                        onChange={(e) => updateApptStatus(a.id, e.target.value as Appointment["status"])}
+                        className="rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-xs"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="completed">Completed</option>
+                      </select>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
+            </div>
+
+            <div className="glass rounded-2xl p-6">
+              <h3 className="font-bold">Live Session Calendar</h3>
+              <p className="mt-1 text-sm text-[#8FA9C7]">Changes sync instantly to the client&apos;s calendar.</p>
+              <form onSubmit={addClass} className="mt-3 grid gap-3 md:grid-cols-3">
+                <input required placeholder="Class Name" value={classForm.name} onChange={(e) => setClassForm({ ...classForm, name: e.target.value })} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none" />
+                <input required type="datetime-local" value={classForm.datetime} onChange={(e) => setClassForm({ ...classForm, datetime: e.target.value })} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none" />
+                <input placeholder="Zoom Link" value={classForm.zoom} onChange={(e) => setClassForm({ ...classForm, zoom: e.target.value })} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none" />
+                <button type="submit" className="rounded-full bg-[#F5821F] px-5 py-2 text-sm font-bold md:col-span-3">Add to Calendar</button>
+              </form>
+              <div className="mt-4">
+                <ClassCalendar events={clientData?.classes || []} />
+              </div>
+              <div className="mt-4 space-y-2">
+                {(clientData?.classes || []).map((c) => (
+                  <div key={c.id} className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-2 text-sm">
+                    <span>{c.name} · {formatDate(c.datetime)}</span>
+                    <button onClick={() => removeClass(c.id)} className="text-red-400">Remove</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <LeaveRequestPanel
+              classes={clientData?.classes || []}
+              isTrainer
+              clientEmail={selectedClient}
+            />
+          </div>
+        )}
+
+        {clientSection === "coaching" && (
+          <div className="space-y-8">
+            <PersonalSend clientEmail={selectedClient} />
+
+            <div>
+              <h3 className="mb-3 font-bold">Messages</h3>
+              <MessageThread clientEmail={selectedClient} currentUserEmail={session.user.email!} isTrainer={true} />
+            </div>
+
+            <div className="glass rounded-2xl p-6">
+              <h3 className="font-bold">Progress Tracker</h3>
+              <form onSubmit={logProgress} className="mt-3 flex flex-wrap gap-3">
+                <input required placeholder="Metric (e.g. Weight kg)" value={progressForm.label} onChange={(e) => setProgressForm({ ...progressForm, label: e.target.value })} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none" />
+                <input required type="number" step="0.1" placeholder="Value" value={progressForm.value} onChange={(e) => setProgressForm({ ...progressForm, value: e.target.value })} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none" />
+                <button type="submit" className="rounded-full bg-[#1E6FD9] px-5 py-2 text-sm font-bold">Log Progress</button>
+              </form>
+              <div className="mt-4"><ProgressChart data={clientData?.progress || []} /></div>
+            </div>
+
+            <div>
+              <h3 className="mb-3 font-bold">Tasks</h3>
+              <TaskList clientEmail={selectedClient} isTrainer={true} />
             </div>
           </div>
-
-          <div className="glass rounded-2xl p-6">
-            <h3 className="font-bold">Progress Tracker</h3>
-            <form onSubmit={logProgress} className="mt-3 flex flex-wrap gap-3">
-              <input required placeholder="Metric (e.g. Weight kg)" value={progressForm.label} onChange={(e) => setProgressForm({ ...progressForm, label: e.target.value })} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none" />
-              <input required type="number" step="0.1" placeholder="Value" value={progressForm.value} onChange={(e) => setProgressForm({ ...progressForm, value: e.target.value })} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none" />
-              <button type="submit" className="rounded-full bg-[#1E6FD9] px-5 py-2 text-sm font-bold">Log Progress</button>
-            </form>
-            <div className="mt-4"><ProgressChart data={clientData?.progress || []} /></div>
-          </div>
-
-          <div>
-            <h3 className="mb-3 font-bold">Tasks</h3>
-            <TaskList clientEmail={selectedClient} isTrainer={true} />
-          </div>
-
-          <div>
-            <h3 className="mb-3 font-bold">Messages</h3>
-            <MessageThread clientEmail={selectedClient} currentUserEmail={session.user.email!} isTrainer={true} />
-          </div>
-        </div>
+        )}
       </DashboardShell>
     );
   }
@@ -280,49 +422,52 @@ export default function TrainerDashboardPage() {
         </div>
       )}
 
-      {active === "appointments" && (
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-white/10 text-left text-[#8FA9C7]">
-                <th className="p-3">Name</th>
-                <th className="p-3">Age</th>
-                <th className="p-3">Location</th>
-                <th className="p-3">Type</th>
-                <th className="p-3">Date</th>
-                <th className="p-3">Contact</th>
-                <th className="p-3">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {appointments.map((a) => (
-                <tr key={a.id} className="border-b border-white/5">
-                  <td className="p-3">{a.name}</td>
-                  <td className="p-3">{a.age ?? "—"}</td>
-                  <td className="p-3">
-                    {[a.city, a.state, a.country].filter(Boolean).join(", ") || "—"}
-                  </td>
-                  <td className="p-3">{a.type}</td>
-                  <td className="p-3">{a.date ? formatDate(a.date) : "TBD"}</td>
-                  <td className="p-3">{a.email}<br />{a.phone || "—"}</td>
-                  <td className="p-3">
-                    <select
-                      value={a.status}
-                      onChange={(e) => updateApptStatus(a.id, e.target.value as Appointment["status"])}
-                      className="rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-xs"
-                    >
-                      <option value="pending">Pending</option>
-                      <option value="confirmed">Confirmed</option>
-                      <option value="completed">Completed</option>
-                    </select>
-                  </td>
+      {active === "plans-hub" && (
+        <div className="space-y-8">
+          <LeaveRequestPanel classes={[]} isTrainer />
+
+          <div className="overflow-x-auto">
+            <h3 className="mb-4 font-bold">All Appointments</h3>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-white/10 text-left text-[#8FA9C7]">
+                  <th className="p-3">Name</th>
+                  <th className="p-3">Age</th>
+                  <th className="p-3">Location</th>
+                  <th className="p-3">Type</th>
+                  <th className="p-3">Date</th>
+                  <th className="p-3">Contact</th>
+                  <th className="p-3">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          {appointments.length === 0 && (
-            <div className="glass mt-4 rounded-2xl p-6 text-[#8FA9C7]">No appointments yet.</div>
-          )}
+              </thead>
+              <tbody>
+                {appointments.map((a) => (
+                  <tr key={a.id} className="border-b border-white/5">
+                    <td className="p-3">{a.name}</td>
+                    <td className="p-3">{a.age ?? "—"}</td>
+                    <td className="p-3">{[a.city, a.state, a.country].filter(Boolean).join(", ") || "—"}</td>
+                    <td className="p-3">{a.type}</td>
+                    <td className="p-3">{a.date ? formatDate(a.date) : "TBD"}</td>
+                    <td className="p-3">{a.email}<br />{a.phone || "—"}</td>
+                    <td className="p-3">
+                      <select
+                        value={a.status}
+                        onChange={(e) => updateApptStatus(a.id, e.target.value as Appointment["status"])}
+                        className="rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-xs"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="completed">Completed</option>
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {appointments.length === 0 && (
+              <div className="glass mt-4 rounded-2xl p-6 text-[#8FA9C7]">No appointments yet.</div>
+            )}
+          </div>
         </div>
       )}
 

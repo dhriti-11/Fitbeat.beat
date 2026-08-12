@@ -27,6 +27,7 @@ export function canAccessKey(userEmail: string, role: string, key: string): bool
   if (key.startsWith("client:")) return key === `client:${userEmail.toLowerCase()}`;
   if (key.startsWith("messages:")) return key === `messages:${userEmail.toLowerCase()}`;
   if (key.startsWith("tasks:")) return key === `tasks:${userEmail.toLowerCase()}`;
+  if (key === "leave-requests") return true;
   if (key === "users" || key === "appointments" || key === "updates" || key === "reviews" || key === "contacts") {
     return role === "trainer";
   }

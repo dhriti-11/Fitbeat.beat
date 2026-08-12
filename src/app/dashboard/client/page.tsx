@@ -2,17 +2,18 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { ClassCalendar } from "@/components/dashboard/ClassCalendar";
 import { ProgressChart } from "@/components/dashboard/ProgressChart";
 import { MessageThread } from "@/components/dashboard/MessageThread";
 import { TaskList } from "@/components/dashboard/TaskList";
 import { YogaLibrary } from "@/components/dashboard/YogaLibrary";
+import { LeaveRequestPanel } from "@/components/dashboard/LeaveRequestPanel";
 import { storageGet } from "@/lib/storage-client";
 import { QUOTES } from "@/lib/constants";
-import type { ClientData, Update, Appointment } from "@/lib/types";
-import { formatDate, uid } from "@/lib/utils";
+import type { ClientData, Update, Appointment, LeaveRequest } from "@/lib/types";
+import { formatDate } from "@/lib/utils";
 
 const NAV = [
   { id: "overview", label: "Overview", icon: "🏠" },
@@ -27,12 +28,13 @@ const NAV = [
 ];
 
 export default function ClientDashboardPage() {
-  const { data: session, status, update } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [active, setActive] = useState("overview");
   const [clientData, setClientData] = useState<ClientData | null>(null);
   const [updates, setUpdates] = useState<Update[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>([]);
 
   const email = session?.user?.email?.toLowerCase() || "";
 
@@ -44,19 +46,33 @@ export default function ClientDashboardPage() {
     }
   }, [status, session, router]);
 
+  const loadClientData = useCallback(async () => {
+    if (!email) return;
+    const data = await storageGet<ClientData>(`client:${email}`);
+    setClientData(data || { dietPlan: "", classes: [], progress: [], dietCalendar: [] });
+  }, [email]);
+
   useEffect(() => {
     if (!email) return;
     async function load() {
-      const data = await storageGet<ClientData>(`client:${email}`);
-      setClientData(data || { dietPlan: "", classes: [], progress: [], dietCalendar: [] });
+      await loadClientData();
       const ups = await storageGet<Update[]>("updates");
       setUpdates(ups || []);
       const r = await fetch("/api/appointments");
       const d = await r.json();
       setAppointments(d.appointments || []);
+      const lr = await fetch("/api/leave-requests");
+      const lrd = await lr.json();
+      setLeaveRequests(lrd.requests || []);
     }
     load();
-  }, [email]);
+  }, [email, loadClientData]);
+
+  useEffect(() => {
+    if (!email || active !== "calendar") return;
+    const t = setInterval(loadClientData, 12000);
+    return () => clearInterval(t);
+  }, [email, active, loadClientData]);
 
   if (status === "loading" || !session) {
     return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
@@ -127,7 +143,17 @@ export default function ClientDashboardPage() {
         </div>
       )}
 
-      {active === "calendar" && <ClassCalendar events={clientData?.classes || []} />}
+      {active === "calendar" && (
+        <div className="space-y-6">
+          <div className="glass rounded-2xl p-4">
+            <p className="text-sm text-[#8FA9C7]">
+              Your calendar updates automatically when your trainer adds or changes sessions.
+            </p>
+          </div>
+          <ClassCalendar events={clientData?.classes || []} leaveRequests={leaveRequests} />
+          <LeaveRequestPanel classes={clientData?.classes || []} isTrainer={false} />
+        </div>
+      )}
 
       {active === "progress" && <ProgressChart data={clientData?.progress || []} />}
 

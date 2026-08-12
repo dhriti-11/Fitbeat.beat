@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Message } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
+import { MessageKindBadge } from "@/components/dashboard/LeaveRequestPanel";
 
 export function MessageThread({
   clientEmail,
@@ -54,9 +55,19 @@ export function MessageThread({
         )}
         {messages.map((m) => {
           const mine = m.from.toLowerCase() === currentUserEmail.toLowerCase();
+          const isPersonal = m.kind && m.kind !== "chat";
           return (
             <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${mine ? "bg-[#1E6FD9]/40" : "bg-white/10"}`}>
+              <div
+                className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
+                  mine
+                    ? "bg-[#1E6FD9]/40"
+                    : isPersonal
+                      ? "border border-[#F5821F]/30 bg-[#F5821F]/10"
+                      : "bg-white/10"
+                }`}
+              >
+                <MessageKindBadge kind={m.kind} subject={m.subject} />
                 <p>{m.text}</p>
                 <p className="mt-1 text-[10px] text-[#8FA9C7]">{formatDate(m.timestamp)}</p>
               </div>
