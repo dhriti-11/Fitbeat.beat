@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
   // Public booking (no auth required)
   if (body.public) {
-    const { name, email, phone, date, trainer, note, type } = body;
+    const { name, email, phone, date, trainer, note, type, age, country, state, city } = body;
     if (!name || !email || !date) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
@@ -34,6 +34,10 @@ export async function POST(req: NextRequest) {
       note: note || "",
       type: type || "demo",
       status: "pending",
+      age: age ? parseInt(age, 10) : undefined,
+      country: country || undefined,
+      state: state || undefined,
+      city: city || undefined,
     });
     await redisSet("appointments", all);
     return NextResponse.json({ ok: true });

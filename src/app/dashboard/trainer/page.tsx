@@ -286,6 +286,8 @@ export default function TrainerDashboardPage() {
             <thead>
               <tr className="border-b border-white/10 text-left text-[#8FA9C7]">
                 <th className="p-3">Name</th>
+                <th className="p-3">Age</th>
+                <th className="p-3">Location</th>
                 <th className="p-3">Type</th>
                 <th className="p-3">Date</th>
                 <th className="p-3">Contact</th>
@@ -296,9 +298,13 @@ export default function TrainerDashboardPage() {
               {appointments.map((a) => (
                 <tr key={a.id} className="border-b border-white/5">
                   <td className="p-3">{a.name}</td>
+                  <td className="p-3">{a.age ?? "—"}</td>
+                  <td className="p-3">
+                    {[a.city, a.state, a.country].filter(Boolean).join(", ") || "—"}
+                  </td>
                   <td className="p-3">{a.type}</td>
-                  <td className="p-3">{formatDate(a.date)}</td>
-                  <td className="p-3">{a.email}<br />{a.phone}</td>
+                  <td className="p-3">{a.date ? formatDate(a.date) : "TBD"}</td>
+                  <td className="p-3">{a.email}<br />{a.phone || "—"}</td>
                   <td className="p-3">
                     <select
                       value={a.status}

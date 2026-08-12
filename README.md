@@ -10,7 +10,7 @@
 - **Tailwind CSS 4** — blue/orange glassmorphism design
 - **React Three Fiber** — 3D hero animations
 - **Framer Motion** — scroll reveals and transitions
-- **Auth.js (NextAuth v5)** — Google OAuth + email OTP via Resend
+- **Auth.js (NextAuth v5)** — Google OAuth + email/name sign-in
 - **Upstash Redis** — persistent storage (users, client data, appointments, messages, tasks)
 - **FullCalendar** — visual class/diet calendars
 - **Recharts** — progress charts
@@ -30,9 +30,11 @@ Set these in `.env.local` (local) and Vercel project settings (production):
 | Variable | Description |
 |----------|-------------|
 | `AUTH_SECRET` | Random secret — run `openssl rand -base64 32` |
-| `AUTH_GOOGLE_ID` | Google OAuth client ID |
-| `AUTH_GOOGLE_SECRET` | Google OAuth client secret |
-| `RESEND_API_KEY` | Resend API key for OTP emails |
+| `AUTH_URL` | App URL, e.g. `http://localhost:3000` or your Vercel URL |
+| `AUTH_GOOGLE_ID` | Google OAuth client ID (optional) |
+| `AUTH_GOOGLE_SECRET` | Google OAuth client secret (optional) |
+| `NEXT_PUBLIC_GOOGLE_AUTH` | Set to `true` to show Google sign-in button |
+| `RESEND_API_KEY` | Resend API key for contact form emails (optional) |
 | `EMAIL_FROM` | Sender address, e.g. `FitBeat <hello@fitbeat.studio>` |
 | `CONTACT_EMAIL` | Where contact form messages go |
 | `KV_REST_API_URL` | Upstash Redis REST URL (auto-injected on Vercel) |
@@ -72,7 +74,7 @@ Push the Next.js code to `main` (already done when you merge `feat/nextjs-redesi
 
 ### 4. Verify
 - Homepage loads (not 404)
-- Sign Up sends OTP (needs Redis + AUTH_SECRET)
+- Sign Up / Sign In works (needs Redis + AUTH_SECRET)
 - Programs images look sharp
 
 ## Deployment (GitHub + Vercel)
@@ -118,10 +120,10 @@ src/
 
 ## Client Flow
 
-1. Sign in (Google or email OTP)
-2. Book free demo if new
-3. Trainer grants dashboard access
-4. Full dashboard: diet, classes, progress, tasks, messages, announcements
+1. **Sign up** with name, email, age, country, state, city → pending appointment created
+2. See **welcome page** — our team will contact you soon
+3. Trainer grants dashboard access after demo
+4. **Sign in** again once approved → full dashboard
 
 ## Trainer Flow
 

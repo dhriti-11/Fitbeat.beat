@@ -6,6 +6,11 @@ export interface User {
   role: UserRole;
   dashboardAccess: boolean;
   joined: string;
+  age?: number;
+  country?: string;
+  state?: string;
+  city?: string;
+  phone?: string;
 }
 
 export interface ClassEvent {
@@ -46,6 +51,10 @@ export interface Appointment {
   note: string;
   type: "demo" | "diet";
   status: "pending" | "confirmed" | "completed";
+  age?: number;
+  country?: string;
+  state?: string;
+  city?: string;
 }
 
 export interface Update {

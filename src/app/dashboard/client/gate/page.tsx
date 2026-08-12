@@ -54,14 +54,14 @@ export default function ClientGatePage() {
   return (
     <main className="relative z-10 flex min-h-screen items-center justify-center px-6">
       <div className="glass w-full max-w-lg rounded-3xl p-8 text-center">
-        <div className="text-4xl">{hasBooking ? "⏳" : "👋"}</div>
+        <div className="text-4xl">{hasBooking ? "✓" : "👋"}</div>
         <h1 className="mt-4 text-2xl font-bold">
-          {hasBooking ? `Almost set, ${name}!` : `You're almost there, ${name}!`}
+          {hasBooking ? `You're registered, ${name}!` : `Welcome, ${name}!`}
         </h1>
         <p className="mt-3 text-[#8FA9C7]">
           {hasBooking
-            ? "Thanks for completing your free demo! Your trainer is setting up your personalized dashboard — diet plan, class calendar, progress tracking, and more."
-            : "Book your free demo session first — once you've trained with us, your full FitBeat dashboard unlocks right here."}
+            ? "Our team will contact you soon to confirm your free demo. Once your trainer approves you, your full dashboard — diet plans, classes, progress tracking and more — unlocks right here."
+            : "Register for a free demo to get started. Your trainer will reach out and unlock your personalized dashboard after your session."}
         </p>
 
         <div className="mt-8 grid grid-cols-2 gap-3 text-sm">
@@ -73,10 +73,10 @@ export default function ClientGatePage() {
         <div className="mt-8 flex flex-col gap-3">
           {!hasBooking && (
             <Link
-              href="/#book"
+              href="/sign-up"
               className="rounded-full bg-gradient-to-r from-[#1E6FD9] to-[#F5821F] py-3 font-bold"
             >
-              Book My Free Demo
+              Register for Free Demo
             </Link>
           )}
           <button
@@ -86,10 +86,13 @@ export default function ClientGatePage() {
           >
             {checking ? "Checking..." : "Check Again"}
           </button>
+          <Link href="/" className="text-sm text-[#8FA9C7] hover:text-white">
+            ← Back to homepage
+          </Link>
         </div>
 
         <p className="mt-6 font-[family-name:var(--font-accent)] text-xs uppercase tracking-widest text-[#8FA9C7]">
-          Your trainer grants access right after your session
+          Your trainer grants dashboard access after your demo
         </p>
       </div>
     </main>
