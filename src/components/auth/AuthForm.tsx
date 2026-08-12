@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
+import { resetDashboardIntro } from "@/components/intro/useIntroSession";
 
 const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_AUTH === "true";
 
@@ -58,6 +59,8 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
       setError("Could not continue. Check your details and try again.");
       return;
     }
+
+    resetDashboardIntro();
 
     router.push(isSignUp ? "/dashboard/client/welcome" : "/dashboard");
     router.refresh();

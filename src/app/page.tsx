@@ -1,3 +1,4 @@
+import { LandingIntroGate } from "@/components/intro/LandingIntroGate";
 import { Navbar } from "@/components/marketing/Navbar";
 import { HeroSection } from "@/components/marketing/HeroSection";
 import { Marquee } from "@/components/marketing/Marquee";
@@ -16,22 +17,24 @@ import { CtaBanner } from "@/components/marketing/CtaBanner";
 
 export default function HomePage() {
   return (
-    <main className="relative z-10">
-      <ScrollProgress />
-      <Navbar />
-      <HeroSection />
-      <Marquee />
-      <ShowcaseSection />
-      <AboutSection />
-      <ProgramsSection />
-      <ServicesSection />
-      <TrainersSection />
-      <TestimonialsSection />
-      <BranchesSection />
-      <CtaBanner />
-      <BookSection />
-      <ContactSection />
-      <Footer />
-    </main>
+    <LandingIntroGate>
+      <main className="relative z-10">
+        <ScrollProgress />
+        <Navbar />
+        <HeroSection />
+        <Marquee />
+        <ShowcaseSection />
+        <AboutSection />
+        <ProgramsSection />
+        <ServicesSection />
+        <TrainersSection />
+        <TestimonialsSection />
+        <BranchesSection />
+        <CtaBanner />
+        <BookSection />
+        <ContactSection />
+        <Footer />
+      </main>
+    </LandingIntroGate>
   );
 }
