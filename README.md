@@ -51,6 +51,30 @@ export const TRAINER_EMAILS = [
 
 Any other email signs in as a **client**. New clients must be approved by a trainer before accessing their full dashboard.
 
+## Go Live on Vercel (for clients)
+
+Your site only shows on the Vercel **Overview** until **Production** is deployed from `main`. Follow these steps once:
+
+### 1. Vercel project settings
+- **Settings → General → Production Branch** → set to `main`
+- **Settings → Build & Development** → Framework: **Next.js**, **Output Directory: blank**
+- **Settings → Environment Variables** (Production + Preview):
+  - `AUTH_SECRET` — run `openssl rand -base64 32`
+  - `AUTH_URL` — `https://fitbeat-beat.vercel.app`
+  - Connect **Upstash Redis** via Storage tab (adds `KV_REST_API_URL` + `KV_REST_API_TOKEN`)
+
+### 2. Deploy production
+Push the Next.js code to `main` (already done when you merge `feat/nextjs-redesign`). Vercel auto-builds Production.
+
+### 3. Share with clients
+- Production URL: **https://fitbeat-beat.vercel.app**
+- Optional: add a custom domain under **Settings → Domains**
+
+### 4. Verify
+- Homepage loads (not 404)
+- Sign Up sends OTP (needs Redis + AUTH_SECRET)
+- Programs images look sharp
+
 ## Deployment (GitHub + Vercel)
 
 1. Push to `https://github.com/dhriti-11/Fitbeat.beat.git`

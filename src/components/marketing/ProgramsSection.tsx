@@ -119,8 +119,9 @@ export function ProgramsSection() {
                       src={item.img!}
                       alt={item.title}
                       fill
+                      quality={92}
                       className="object-cover"
-                      sizes={isMobile ? "170px" : "240px"}
+                      sizes="(max-width: 768px) 340px, 480px"
                       priority={i < 3}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#060e1a] via-[#060e1a]/40 to-transparent" />
