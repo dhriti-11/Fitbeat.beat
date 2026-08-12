@@ -30,9 +30,19 @@ export function ContactSection() {
           <p className="mt-6 max-w-md text-[#8FA9C7]">
             Questions about a plan, an injury, or which coach fits your goal? Send it straight to the team.
           </p>
-          <div className="mt-10 space-y-2 font-[family-name:var(--font-accent)] text-sm uppercase tracking-widest text-[#8FA9C7]">
-            <p>hello@fitbeat.studio</p>
-            <p>+91 98765 43210</p>
+          <div className="mt-10 space-y-4 font-[family-name:var(--font-accent)] text-sm tracking-wide text-[#8FA9C7]">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#4FA3FF]">Rashmi Chokshi</p>
+              <a href="mailto:rashmi.chokshi15@gmail.com" className="transition hover:text-[#F5821F]">
+                rashmi.chokshi15@gmail.com
+              </a>
+            </div>
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#4FA3FF]">Chit Ronak</p>
+              <a href="mailto:chit_ronak@yahoo.com" className="transition hover:text-[#F5821F]">
+                chit_ronak@yahoo.com
+              </a>
+            </div>
           </div>
         </div>
 

@@ -79,7 +79,7 @@ export function HeroSection() {
         <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4 md:gap-0 md:divide-x md:divide-white/10">
           {[
             { n: "1,200+", l: "Members Trained" },
-            { n: "6", l: "Expert Trainers" },
+            { n: "3", l: "Expert Trainers" },
             { n: "94%", l: "Goal Completion" },
             { n: "4.9", l: "Client Rating" },
           ].map((s) => (

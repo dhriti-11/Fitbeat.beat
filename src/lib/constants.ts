@@ -19,11 +19,11 @@ export const TRAINERS = [
     initials: "RC",
   },
   {
-    email: "trainer3@fitbeat.studio",
-    name: "Trainer Name",
+    email: "rupal.desai@fitbeat.studio",
+    name: "Rupal Desai",
     role: "Certified Trainer",
-    bio: "Certified FitBeat trainer — bio and specialisation coming soon.",
-    initials: "FB",
+    bio: "Certified FitBeat trainer focused on holistic wellness, strength building and helping clients stay consistent with their fitness goals.",
+    initials: "RD",
   },
 ];
 

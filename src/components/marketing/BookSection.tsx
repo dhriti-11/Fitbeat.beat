@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { TRAINERS } from "@/lib/constants";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
 export function BookSection() {
   const [type, setType] = useState<"demo" | "diet">("demo");
   const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", date: "", trainer: "", note: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", date: "", note: "" });
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -61,16 +60,6 @@ export function BookSection() {
               className="w-full border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm outline-none transition focus:border-[#F5821F]"
             />
           ))}
-          <select
-            value={form.trainer}
-            onChange={(e) => setForm({ ...form, trainer: e.target.value })}
-            className="w-full border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm"
-          >
-            <option value="">Preferred Trainer (optional)</option>
-            {TRAINERS.map((t) => (
-              <option key={t.email} value={t.name}>{t.name}</option>
-            ))}
-          </select>
           <textarea
             placeholder="Anything we should know?"
             value={form.note}
