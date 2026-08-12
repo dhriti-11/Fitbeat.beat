@@ -19,16 +19,24 @@ export default auth((req) => {
     return NextResponse.redirect(new URL("/dashboard/client/gate", req.url));
   }
 
+  if (
+    pathname.startsWith("/dashboard/client/welcome") &&
+    role === "client" &&
+    hasAccess
+  ) {
+    return NextResponse.redirect(new URL("/dashboard/client", req.url));
+  }
+
   if (pathname.startsWith("/sign-in") && isLoggedIn) {
     if (role === "trainer") return NextResponse.redirect(new URL("/dashboard/trainer", req.url));
-    if (!hasAccess) return NextResponse.redirect(new URL("/dashboard/client/gate", req.url));
-    return NextResponse.redirect(new URL("/dashboard/client", req.url));
+    if (hasAccess) return NextResponse.redirect(new URL("/dashboard/client", req.url));
+    return NextResponse.redirect(new URL("/dashboard/client/gate", req.url));
   }
 
   if (pathname.startsWith("/sign-up") && isLoggedIn) {
     if (role === "trainer") return NextResponse.redirect(new URL("/dashboard/trainer", req.url));
-    if (!hasAccess) return NextResponse.redirect(new URL("/dashboard/client/gate", req.url));
-    return NextResponse.redirect(new URL("/dashboard/client", req.url));
+    if (hasAccess) return NextResponse.redirect(new URL("/dashboard/client", req.url));
+    return NextResponse.redirect(new URL("/dashboard/client/gate", req.url));
   }
 
   return NextResponse.next();
